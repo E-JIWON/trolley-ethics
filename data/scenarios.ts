@@ -16,6 +16,7 @@ export type Choice = {
   label: string;
   sub: string;
   tags: Tag[];
+  globalPct: number;
 };
 
 export type Scenario = {
@@ -53,12 +54,14 @@ export const scenarios: Scenario[] = [
         label: "레버를 당긴다",
         sub: "한 명이 죽지만 다섯 명을 살린다",
         tags: ["공리주의", "결과주의"],
+        globalPct: 89,
       },
       {
         key: "nothing",
         label: "당기지 않는다",
         sub: "다섯 명이 죽더라도 내가 그 한 명을 죽인 게 되지는 않는다",
         tags: ["의무론", "행위/방관 구분"],
+        globalPct: 11,
       },
     ],
     notes:
@@ -85,12 +88,14 @@ export const scenarios: Scenario[] = [
         label: "민다",
         sub: "산수는 똑같다. 결과를 우선한다",
         tags: ["공리주의", "결과주의"],
+        globalPct: 12,
       },
       {
         key: "nothing",
         label: "밀지 않는다",
         sub: "사람을 도구로 쓰는 것은 다르다",
         tags: ["의무론", "이중결과 원칙"],
+        globalPct: 88,
       },
     ],
     notes:
@@ -117,12 +122,14 @@ export const scenarios: Scenario[] = [
         label: "적출한다",
         sub: "다섯 생명이 한 생명보다 무겁다",
         tags: ["공리주의", "결과주의"],
+        globalPct: 5,
       },
       {
         key: "nothing",
         label: "정상 진료한다",
         sub: "의사는 살인자가 되어선 안 된다",
         tags: ["의무론", "권리 기반"],
+        globalPct: 95,
       },
     ],
     notes:
@@ -148,18 +155,21 @@ export const scenarios: Scenario[] = [
         label: "사망자 최소화 우선",
         sub: "총 인명 피해를 줄이도록 설계",
         tags: ["공리주의"],
+        globalPct: 76,
       },
       {
         key: "protect",
         label: "운전자 보호 우선",
         sub: "차주의 안전이 제품의 본분",
         tags: ["의무론", "계약주의"],
+        globalPct: 19,
       },
       {
         key: "random",
         label: "AI가 결정하지 않도록",
         sub: "생명의 무게를 알고리즘이 정해선 안 된다",
         tags: ["덕 윤리", "절차적 정의"],
+        globalPct: 5,
       },
     ],
     notes:
@@ -186,12 +196,14 @@ export const scenarios: Scenario[] = [
         label: "당긴다",
         sub: "도덕은 사적 관계를 넘어서야 한다",
         tags: ["공리주의", "공평주의"],
+        globalPct: 30,
       },
       {
         key: "nothing",
         label: "당기지 않는다",
         sub: "특별한 관계엔 특별한 의무가 있다",
         tags: ["덕 윤리", "관계 윤리"],
+        globalPct: 70,
       },
     ],
     notes:

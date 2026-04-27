@@ -28,7 +28,7 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
   const progress = (scenario.id / scenarios.length) * 100;
 
   return (
-    <main className="min-h-screen bg-paper">
+    <main key={scenario.slug} className="min-h-screen bg-paper">
       {/* 진행 표시 */}
       <div className="fixed top-0 left-0 right-0 h-[3px] bg-line z-50">
         <div
