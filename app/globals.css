@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&display=swap");
+
+:root {
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    system-ui, "Helvetica Neue", "Apple SD Gothic Neo", sans-serif;
+  --font-serif: "Noto Serif KR", "Noto Serif", "Times New Roman", Georgia, serif;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: #fafaf7;
+  color: #1a1a1a;
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "ss02";
+}
+
+::selection {
+  background: #1a1a1a;
+  color: #fafaf7;
+}
+
+.serif {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.dropcap::first-letter {
+  font-family: var(--font-serif);
+  font-size: 4.5em;
+  float: left;
+  line-height: 0.85;
+  margin: 0.05em 0.08em 0 -0.04em;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.editorial-body p {
+  margin-bottom: 1.4rem;
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  letter-spacing: -0.003em;
+  color: #2a2a2a;
+}
+
+.editorial-body p:first-of-type {
+  margin-top: 0;
+}
+
+.rule {
+  height: 1px;
+  background: #1a1a1a;
+  width: 40px;
+}
+
+.rule-faint {
+  height: 1px;
+  background: #d4d2cb;
+  width: 100%;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fadeUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.fade-up-delay-1 {
+  animation-delay: 0.1s;
+}
+
+.fade-up-delay-2 {
+  animation-delay: 0.2s;
+}
+
+.fade-up-delay-3 {
+  animation-delay: 0.3s;
+}
+
+button {
+  font-family: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
