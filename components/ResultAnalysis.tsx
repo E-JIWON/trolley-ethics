@@ -498,7 +498,13 @@ function CoordinateMap({ coords }: { coords: { x: number; y: number } }) {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-function ShareButton({ profile }: { profile: Profile }) {
+function ShareButton({
+  profile,
+  answers,
+}: {
+  profile: Profile;
+  answers: Answers;
+}) {
   const [sharing, setSharing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -508,12 +514,16 @@ function ShareButton({ profile }: { profile: Profile }) {
     setError(null);
 
     try {
+      const answerKeys = scenarios
+        .map((s) => answers[s.id]?.key ?? "-")
+        .join(",");
       const params = new URLSearchParams({
         name: profile.name,
         alias: profile.alias,
         subtitle: profile.subtitle,
         motto: profile.motto,
         rarity: String(profile.rarityPct),
+        answers: answerKeys,
       });
 
       const res = await fetch(`/og?${params}`);
@@ -1070,7 +1080,7 @@ export default function ResultAnalysis() {
       {/* CTA */}
       <Reveal>
         <section className="max-w-wide mx-auto px-6 md:px-10 py-10 md:py-14 border-t border-ink/15 space-y-3">
-          <ShareButton profile={profile} />
+          <ShareButton profile={profile} answers={answers} />
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => {
