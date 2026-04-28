@@ -498,6 +498,83 @@ function CoordinateMap({ coords }: { coords: { x: number; y: number } }) {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
+function ShareButton({ profile }: { profile: Profile }) {
+  const [sharing, setSharing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleShare() {
+    if (sharing) return;
+    setSharing(true);
+    setError(null);
+
+    try {
+      const params = new URLSearchParams({
+        name: profile.name,
+        alias: profile.alias,
+        subtitle: profile.subtitle,
+        motto: profile.motto,
+        rarity: String(profile.rarityPct),
+      });
+
+      const res = await fetch(`/og?${params}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const blob = await res.blob();
+      const file = new File([blob], `trolley-${profile.key}.png`, {
+        type: "image/png",
+      });
+
+      if (
+        typeof navigator !== "undefined" &&
+        typeof navigator.canShare === "function" &&
+        navigator.canShare({ files: [file] })
+      ) {
+        try {
+          await navigator.share({
+            title: "나의 도덕 유형",
+            text: `나는 ${profile.name}. ${profile.subtitle}.`,
+            files: [file],
+          });
+          return;
+        } catch {
+          // 사용자 취소 또는 share 실패 → 다운로드로 폴백
+        }
+      }
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `trolley-${profile.key}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "실패");
+    } finally {
+      setSharing(false);
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      <button
+        onClick={handleShare}
+        disabled={sharing}
+        className="w-full bg-accent text-paper py-4 text-sm tracking-wide hover:bg-ink transition-colors disabled:opacity-60"
+      >
+        {sharing ? "이미지 만드는 중…" : "결과 이미지로 저장 / 공유 →"}
+      </button>
+      {error && (
+        <p className="text-[12px] text-accent text-center">
+          오류: {error}. 다시 시도해주세요.
+        </p>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function ResultAnalysis() {
   const [answers, setAnswers] = useState<Answers | null>(null);
 
@@ -992,7 +1069,8 @@ export default function ResultAnalysis() {
 
       {/* CTA */}
       <Reveal>
-        <section className="max-w-wide mx-auto px-6 md:px-10 py-10 md:py-14 border-t border-ink/15">
+        <section className="max-w-wide mx-auto px-6 md:px-10 py-10 md:py-14 border-t border-ink/15 space-y-3">
+          <ShareButton profile={profile} />
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => {
