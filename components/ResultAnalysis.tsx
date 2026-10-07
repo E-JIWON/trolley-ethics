@@ -1031,10 +1031,64 @@ export default function ResultAnalysis() {
         </section>
       </Reveal>
 
-      {/* No.07 — 다른 자리들 */}
+      {/* 연구 데이터 — 접어둔다 */}
       <Reveal>
         <section className={SECTION + " border-t border-ink/10"}>
-          <ChapterHead no="07" title="다른 자리들" />
+          <details className="group">
+            <summary className="cursor-pointer list-none flex items-baseline justify-between gap-3">
+              <ChapterHead no="07" title="사람들은 어떻게 답했나" />
+              <span className="serif text-base text-muted group-open:rotate-45 transition-transform">
+                +
+              </span>
+            </summary>
+            <p className="-mt-4 mb-6 text-[12px] text-muted">
+              각 시나리오의 실제 연구 수치와 출처. 궁금한 사람만 펼쳐 보면 된다.
+            </p>
+            <div className="space-y-8">
+              {scenarios.map((s) => (
+                <div key={s.id}>
+                  <div className="serif text-[15px] mb-2">
+                    <span className="text-muted/50 tabular-nums mr-2">{s.number}</span>
+                    {s.title}
+                  </div>
+                  <dl className="border-y border-ink/10 divide-y divide-ink/5">
+                    {s.evidence.map((e) => (
+                      <div
+                        key={e.label}
+                        className="py-2.5 grid grid-cols-[56px_1fr] md:grid-cols-[72px_1fr] gap-3"
+                      >
+                        <dt className="text-[10px] tracking-[0.15em] uppercase text-muted pt-0.5">
+                          {e.label}
+                        </dt>
+                        <dd className="text-[13px] leading-[1.7] text-ink/80">{e.detail}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <ul className="mt-2 space-y-1">
+                    {s.sources.map((src) => (
+                      <li key={src.url} className="text-[11.5px] leading-[1.6] text-muted">
+                        <a
+                          href={src.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline decoration-ink/20 underline-offset-2 hover:text-ink"
+                        >
+                          {src.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </details>
+        </section>
+      </Reveal>
+
+      {/* No.08 — 다른 자리들 */}
+      <Reveal>
+        <section className={SECTION + " border-t border-ink/10"}>
+          <ChapterHead no="08" title="다른 자리들" />
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
             {TYPE_BRIEFS.map((t, i) => {
               const isMe = t.key === profile.key;

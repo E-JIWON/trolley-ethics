@@ -100,28 +100,6 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
           />
         </div>
 
-        {/* 실제 데이터 */}
-        <section className="fade-up mb-10">
-          <div className="text-[11px] tracking-[0.25em] uppercase text-muted mb-3">
-            사람들은 어떻게 답했나
-          </div>
-          <dl className="border-y border-ink/15 divide-y divide-ink/10">
-            {scenario.evidence.map((e) => (
-              <div
-                key={e.label}
-                className="py-3 grid grid-cols-[56px_1fr] md:grid-cols-[72px_1fr] gap-3"
-              >
-                <dt className="text-[10px] tracking-[0.15em] uppercase text-muted pt-1">
-                  {e.label}
-                </dt>
-                <dd className="text-[13.5px] leading-[1.7] text-ink/85">
-                  {e.detail}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </section>
-
         {/* 노트 */}
         <details className="fade-up group border-t border-ink/15 pt-6">
           <summary className="cursor-pointer list-none flex items-center justify-between text-[11px] tracking-[0.25em] uppercase text-muted hover:text-ink transition-colors">
