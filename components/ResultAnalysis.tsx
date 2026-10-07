@@ -687,7 +687,7 @@ export default function ResultAnalysis() {
             {profile.name[0]}
           </div>
         </div>
-        <h1 className="fade-up fade-up-delay-1 serif text-[34px] md:text-[52px] leading-[1.05] tracking-[-0.03em] font-medium mb-3">
+        <h1 className="fade-up fade-up-delay-1 serif text-[30px] md:text-[44px] leading-[1.08] tracking-[-0.03em] font-medium mb-3">
           {profile.name}
         </h1>
         <div className="fade-up fade-up-delay-2 text-[11px] tracking-[0.3em] uppercase text-accent mb-5">

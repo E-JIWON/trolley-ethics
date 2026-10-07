@@ -56,10 +56,16 @@ data/
 
 서버 컴포넌트가 본문/제목/메타데이터를 모두 렌더링하므로 SEO·SSR 친화적이고, 사용자 답변만 클라이언트에서 localStorage에 저장한다.
 
-## 시나리오 출처
+## 데이터와 출처
 
-1. 필리파 풋, "The Problem of Abortion and the Doctrine of the Double Effect" (1967)
-2. 주디스 자비스 톰슨, "The Trolley Problem" (1985)
-3. 주디스 자비스 톰슨, "Killing, Letting Die, and the Trolley Problem" (1976)
-4. Awad et al., "The Moral Machine Experiment" (Nature, 2018)
-5. 버나드 윌리엄스, "Persons, Character and Morality" (1981) — 'one thought too many'
+각 시나리오의 선택지 막대와 "사람들은 어떻게 답했나" 섹션은 실제 연구 수치다. 추정치는 화면에 추정이라고 표기한다.
+
+| 시나리오 | 수치 | 출처 |
+|---|---|---|
+| 01 레버 | 일반인 89% 당김 · 철학자 63% 당김 / 13% 안 당김 | Hauser et al. 2007 (n>5,000) · PhilPapers 2020 (n=1,736) |
+| 02 육교 | 일반인 11% 밈 · 철학자 22% 밈 / 56% 안 밈 | Hauser et al. 2007 · PhilPapers 2020 (n=1,740) · Greene et al. 2009 |
+| 03 이식 | 공리주의 응답 10% 미만 (근사) | Greene et al. 2001 딜레마 세트 · Thomson 1976, 2008 |
+| 04 자율주행 | 76% "최소화가 더 도덕적" · 4천만 건, 233개국 | Bonnefon, Shariff & Rahwan 2016 (Science) · Awad et al. 2018 (Nature) · 독일 윤리위 2017 |
+| 05 가족 | 관련도 높을수록 덜 당김 (전체 53%) · 형제 1 vs 형제 5는 88.7% | Bleske-Rechek et al. 2010 · Kurzban, DeScioli & Fein 2012 (n=616) · Williams 1981 |
+
+전체 서지는 `data/scenarios.ts`의 `sources` 배열에 DOI 링크로 들어 있고, 각 시나리오 하단 "편집자 주 · 출처"에서 열어볼 수 있다.

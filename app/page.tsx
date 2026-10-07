@@ -20,7 +20,7 @@ export default function Home() {
             Trolley Problem · 트롤리 문제
           </div>
 
-          <h1 className="fade-up fade-up-delay-1 serif text-[44px] md:text-[76px] leading-[1.02] tracking-[-0.03em] font-medium mb-8">
+          <h1 className="fade-up fade-up-delay-1 serif text-[40px] md:text-[60px] leading-[1.05] tracking-[-0.03em] font-medium mb-8">
             선로 위의<br />다섯 사람
           </h1>
 

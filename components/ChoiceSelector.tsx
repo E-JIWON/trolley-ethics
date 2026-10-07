@@ -9,6 +9,7 @@ type Props = {
   scenarioId: number;
   choices: Choice[];
   nextSlug: string | null;
+  pctNote: string;
 };
 
 function ChoicePct({
@@ -39,6 +40,7 @@ export default function ChoiceSelector({
   scenarioId,
   choices,
   nextSlug,
+  pctNote,
 }: Props) {
   const router = useRouter();
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
@@ -118,7 +120,7 @@ export default function ChoiceSelector({
             onClick={() => handleSelect(choice)}
             disabled={selectedKey !== null}
             className={[
-              "w-full text-left p-5 md:p-6 transition-all group border",
+              "w-full text-left p-4 md:p-5 transition-all group border",
               isSelected
                 ? "border-ink bg-white"
                 : isOther
@@ -139,7 +141,7 @@ export default function ChoiceSelector({
               <div className="flex-1">
                 <div
                   className={[
-                    "serif text-base md:text-lg leading-snug mb-1.5 transition-colors",
+                    "serif text-[15px] md:text-[17px] leading-snug mb-1 transition-colors",
                     isSelected ? "text-ink" : "group-hover:text-accent",
                   ].join(" ")}
                 >
@@ -190,10 +192,7 @@ export default function ChoiceSelector({
       {selectedKey !== null && (
         <div className="pt-6 fade-up">
           <p className="text-[13px] text-muted mb-4 leading-relaxed">
-            막대는 같은 답을 한 사람의 비율(추정).{" "}
-            <span className="italic">
-              직관은 다수결로 결정되지 않지만, 어디에 서 있는지는 알아두면 좋다.
-            </span>
+            막대는 같은 답을 한 사람의 비율. {pctNote}
           </p>
           <button
             onClick={handleNext}
