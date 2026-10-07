@@ -18,9 +18,12 @@ export function useInView<T extends Element>(
     const el = ref.current;
     if (!el) return;
 
+    // 모션 줄이기 설정이거나 좁은 화면(폰)이면 바로 보여준다 —
+    // 긴 결과 페이지를 빠르게 스크롤할 때 빈 자리가 남지 않게
     if (
       typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+      (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ||
+        window.matchMedia?.("(max-width: 767px)").matches)
     ) {
       setInView(true);
       return;
@@ -33,7 +36,7 @@ export function useInView<T extends Element>(
           obs.disconnect();
         }
       },
-      { rootMargin: "0px 0px -8% 0px", threshold: 0.05, ...options }
+      { rootMargin: "0px 0px 120px 0px", threshold: 0, ...options }
     );
     obs.observe(el);
     return () => obs.disconnect();

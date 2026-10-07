@@ -14,7 +14,7 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="flex-1 flex items-center justify-center px-6 md:px-10 py-12">
+      <section className="flex-1 flex items-start md:items-center justify-center px-6 md:px-10 pt-16 pb-12 md:py-12">
         <div className="max-w-wide w-full text-center">
           <div className="fade-up text-[11px] tracking-[0.3em] uppercase text-muted mb-6">
             Trolley Problem · 트롤리 문제
