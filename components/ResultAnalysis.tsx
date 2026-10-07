@@ -429,7 +429,7 @@ function ChapterHead({ no, title }: { no: string; title: string }) {
   );
 }
 
-const SECTION = "max-w-wide mx-auto px-6 md:px-10 py-12 md:py-16";
+const SECTION = "max-w-wide mx-auto px-6 md:px-10 py-8 md:py-10";
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -678,7 +678,7 @@ export default function ResultAnalysis() {
   return (
     <>
       {/* HERO */}
-      <section className="max-w-wide mx-auto px-6 md:px-10 pt-10 md:pt-14 pb-10">
+      <section className="max-w-wide mx-auto px-6 md:px-10 pt-8 md:pt-10 pb-6">
         <div className="flex items-start justify-between gap-6 mb-6">
           <div className="fade-up text-[11px] tracking-[0.3em] uppercase text-muted">
             당신의 도덕 유형
@@ -733,7 +733,7 @@ export default function ResultAnalysis() {
 
       {/* MOTTO */}
       <Reveal>
-        <section className="max-w-wide mx-auto px-6 md:px-10 py-10 md:py-14 border-b border-ink/10">
+        <section className="max-w-wide mx-auto px-6 md:px-10 py-6 md:py-8 border-b border-ink/10">
           <div className="flex items-baseline gap-5">
             <div className="text-[10px] tracking-[0.25em] uppercase text-muted shrink-0 mt-1.5">
               모토

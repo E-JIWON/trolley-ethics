@@ -52,13 +52,13 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
         </div>
       </header>
 
-      <article className="max-w-prose mx-auto px-6 md:px-10 py-12 md:py-16">
+      <article className="max-w-prose mx-auto px-6 md:px-10 py-8 md:py-12">
         {/* 제목부 */}
-        <div className="fade-up mb-12">
-          <div className="text-[11px] tracking-[0.25em] uppercase text-muted mb-6">
+        <div className="fade-up mb-7">
+          <div className="text-[11px] tracking-[0.25em] uppercase text-muted mb-3">
             시나리오 {scenario.number} · {scenario.eyebrow}
           </div>
-          <h1 className="serif text-[30px] md:text-[40px] leading-[1.15] tracking-[-0.02em] font-medium mb-6">
+          <h1 className="serif text-[30px] md:text-[40px] leading-[1.15] tracking-[-0.02em] font-medium mb-3">
             {scenario.title}
           </h1>
           <div className="text-sm text-muted italic serif">
@@ -66,23 +66,23 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
           </div>
         </div>
 
-        <div className="rule mb-12 fade-up fade-up-delay-1" />
+        <div className="rule mb-7 fade-up fade-up-delay-1" />
 
         {/* 훅 */}
-        <p className="serif fade-up fade-up-delay-1 text-lg md:text-[21px] leading-[1.55] tracking-[-0.01em] text-ink mb-12 italic">
+        <p className="serif fade-up fade-up-delay-1 text-lg md:text-[21px] leading-[1.55] tracking-[-0.01em] text-ink mb-7 italic">
           {scenario.hook}
         </p>
 
         {/* 본문 */}
-        <div className="editorial-body fade-up fade-up-delay-2 mb-16">
+        <div className="editorial-body fade-up fade-up-delay-2 mb-10">
           {scenario.body.map((paragraph, i) => (
             <p key={i}>{paragraph}</p>
           ))}
         </div>
 
         {/* 질문 */}
-        <div className="fade-up fade-up-delay-3 mb-10">
-          <div className="text-[11px] tracking-[0.25em] uppercase text-muted mb-4">
+        <div className="fade-up fade-up-delay-3 mb-6">
+          <div className="text-[11px] tracking-[0.25em] uppercase text-muted mb-2">
             질문
           </div>
           <h2 className="serif text-xl md:text-2xl leading-[1.4] tracking-[-0.01em]">
@@ -91,7 +91,7 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
         </div>
 
         {/* 선택지 */}
-        <div className="fade-up fade-up-delay-3 mb-20">
+        <div className="fade-up fade-up-delay-3 mb-12">
           <ChoiceSelector
             scenarioId={scenario.id}
             choices={scenario.choices}
@@ -100,7 +100,7 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
         </div>
 
         {/* 노트 */}
-        <details className="fade-up group border-t border-ink/15 pt-8">
+        <details className="fade-up group border-t border-ink/15 pt-6">
           <summary className="cursor-pointer list-none flex items-center justify-between text-[11px] tracking-[0.25em] uppercase text-muted hover:text-ink transition-colors">
             <span>편집자 주</span>
             <span className="serif text-base group-open:rotate-45 transition-transform">
