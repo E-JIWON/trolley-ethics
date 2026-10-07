@@ -7,7 +7,7 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 const TITLE = "선로 위의 다섯 사람";
-const SUB = "트롤리 문제 · 5개의 질문 · 약 5분 · 도덕 유형 분석";
+const SUB = "트롤리 문제 · 15개의 질문 · 약 12분 · 도덕 유형 분석";
 const EYEBROW = "TROLLEY PROBLEM · 윤리 사고실험";
 
 export default async function Image() {

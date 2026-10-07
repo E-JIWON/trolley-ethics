@@ -29,9 +29,9 @@ export default function Home() {
           </div>
 
           <div className="fade-up fade-up-delay-2 flex flex-wrap items-center justify-center gap-x-7 gap-y-2 text-[11px] tracking-[0.2em] uppercase text-muted mb-9">
-            <span>5개의 질문</span>
+            <span>15개의 질문</span>
             <span className="text-ink/15">·</span>
-            <span>약 5분</span>
+            <span>약 12분</span>
             <span className="text-ink/15">·</span>
             <span>도덕 유형 분석</span>
           </div>

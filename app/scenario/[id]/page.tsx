@@ -4,8 +4,11 @@ import {
   getScenarioBySlug,
   getNextScenario,
   scenarios,
+  SITE_URL,
 } from "@/data/scenarios";
 import ChoiceSelector from "@/components/ChoiceSelector";
+import ShareButton from "@/components/ShareButton";
+import Em from "@/components/Em";
 
 export function generateStaticParams() {
   return scenarios.map((s) => ({ id: s.slug }));
@@ -15,8 +18,13 @@ export function generateMetadata({ params }: { params: { id: string } }) {
   const scenario = getScenarioBySlug(params.id);
   if (!scenario) return {};
   return {
-    title: `${scenario.title} · 시나리오 ${scenario.number}/0${scenarios.length}`,
-    description: scenario.hook,
+    title: `${scenario.question} · 질문 ${scenario.number}/${scenarios.length}`,
+    description: `${scenario.title} — ${scenario.hook}`,
+    openGraph: {
+      title: scenario.question,
+      description: `${scenario.title} · 너라면 어떻게 할래? — 선로 위의 다섯 사람`,
+      url: `${SITE_URL}/scenario/${scenario.slug}`,
+    },
   };
 }
 
@@ -26,28 +34,23 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
 
   const next = getNextScenario(scenario.id);
   const progress = (scenario.id / scenarios.length) * 100;
+  const total = String(scenarios.length).padStart(2, "0");
 
   return (
     <main key={scenario.slug} className="min-h-screen bg-paper">
       {/* 진행 표시 */}
       <div className="fixed top-0 left-0 right-0 h-[3px] bg-line z-50">
-        <div
-          className="h-full bg-ink transition-all duration-500"
-          style={{ width: `${progress}%` }}
-        />
+        <div className="h-full bg-ink transition-all duration-500" style={{ width: `${progress}%` }} />
       </div>
 
       {/* 헤더 */}
       <header className="border-b border-line">
         <div className="max-w-wide mx-auto px-6 md:px-10 py-5 flex items-center justify-between">
-          <Link
-            href="/"
-            className="text-[11px] tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors"
-          >
+          <Link href="/" className="text-[11px] tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors">
             ← 처음으로
           </Link>
           <div className="text-[11px] tracking-[0.15em] uppercase text-muted tabular-nums">
-            {scenario.number} / {String(scenarios.length).padStart(2, "0")}
+            {scenario.number} / {total}
           </div>
         </div>
       </header>
@@ -56,14 +59,12 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
         {/* 제목부 */}
         <div className="fade-up mb-7">
           <div className="text-[11px] tracking-[0.25em] uppercase text-muted mb-3">
-            시나리오 {scenario.number} · {scenario.eyebrow}
+            질문 {scenario.number} · {scenario.eyebrow}
           </div>
           <h1 className="serif text-[26px] md:text-[32px] leading-[1.2] tracking-[-0.02em] font-medium mb-3">
             {scenario.title}
           </h1>
-          <div className="text-sm text-muted italic serif">
-            {scenario.attribution}
-          </div>
+          <div className="text-sm text-muted italic serif">{scenario.attribution}</div>
         </div>
 
         <div className="rule mb-7 fade-up fade-up-delay-1" />
@@ -76,18 +77,23 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
         {/* 본문 */}
         <div className="editorial-body fade-up fade-up-delay-2 mb-10">
           {scenario.body.map((paragraph, i) => (
-            <p key={i}>{paragraph}</p>
+            <p key={i}>
+              <Em>{paragraph}</Em>
+            </p>
           ))}
         </div>
 
         {/* 질문 */}
         <div className="fade-up fade-up-delay-3 mb-6">
-          <div className="text-[11px] tracking-[0.25em] uppercase text-muted mb-2">
-            질문
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-[11px] tracking-[0.25em] uppercase text-muted">질문</div>
+            <ShareButton
+              title={`${scenario.question} — 선로 위의 다섯 사람`}
+              text={`너는 이 질문에 뭐라고 답할래? "${scenario.question}"`}
+              url={`/scenario/${scenario.slug}`}
+            />
           </div>
-          <h2 className="serif text-lg md:text-[22px] leading-[1.4] tracking-[-0.01em]">
-            {scenario.question}
-          </h2>
+          <h2 className="serif text-lg md:text-[22px] leading-[1.4] tracking-[-0.01em]">{scenario.question}</h2>
         </div>
 
         {/* 선택지 */}
@@ -104,22 +110,13 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
         <details className="fade-up group border-t border-ink/15 pt-6">
           <summary className="cursor-pointer list-none flex items-center justify-between text-[11px] tracking-[0.25em] uppercase text-muted hover:text-ink transition-colors">
             <span>편집자 주 · 출처</span>
-            <span className="serif text-base group-open:rotate-45 transition-transform">
-              +
-            </span>
+            <span className="serif text-base group-open:rotate-45 transition-transform">+</span>
           </summary>
-          <p className="serif text-[14px] leading-[1.8] text-muted mt-4 italic">
-            {scenario.notes}
-          </p>
+          <p className="serif text-[14px] leading-[1.8] text-muted mt-4 italic">{scenario.notes}</p>
           <ul className="mt-4 space-y-1.5">
             {scenario.sources.map((s) => (
               <li key={s.url} className="text-[12px] leading-[1.6] text-muted">
-                <a
-                  href={s.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline decoration-ink/20 underline-offset-2 hover:text-ink hover:decoration-ink"
-                >
+                <a href={s.url} target="_blank" rel="noopener noreferrer" className="underline decoration-ink/20 underline-offset-2 hover:text-ink hover:decoration-ink">
                   {s.title}
                 </a>
               </li>

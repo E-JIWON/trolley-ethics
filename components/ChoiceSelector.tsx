@@ -147,9 +147,15 @@ export default function ChoiceSelector({
                 >
                   {choice.label}
                 </div>
-                <div className="text-[13px] text-muted leading-relaxed">
-                  {choice.sub}
+                <div
+                  className={[
+                    "text-[13px] leading-relaxed mb-0.5",
+                    isSelected ? "text-accent" : "text-ink/75",
+                  ].join(" ")}
+                >
+                  → {choice.outcome}
                 </div>
+                <div className="text-[12.5px] text-muted leading-relaxed">{choice.sub}</div>
 
                 {selectedKey !== null && (
                   <div className="mt-4 pt-4 border-t border-ink/10 flex items-baseline gap-3">
