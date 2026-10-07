@@ -1,30 +1,8 @@
 import { ImageResponse } from "next/og";
 import { scenarios } from "@/data/scenarios";
+import { loadFont } from "@/lib/og-font";
 
 export const runtime = "edge";
-
-async function loadFont(
-  family: string,
-  weight: number,
-  text: string
-): Promise<ArrayBuffer> {
-  // v1 /css endpoint serves TTF (format: truetype) by default — Satori needs TTF/OTF, not WOFF2.
-  const css = await fetch(
-    `https://fonts.googleapis.com/css?family=${encodeURIComponent(
-      family
-    )}:${weight}&text=${encodeURIComponent(text)}&display=swap`,
-    { cache: "force-cache" }
-  ).then((r) => r.text());
-
-  const match =
-    css.match(/src:\s*url\((https:[^)]+)\)\s*format\(['"]truetype['"]\)/) ??
-    css.match(/src:\s*url\((https:[^)]+)\)/);
-  if (!match) {
-    throw new Error(`Font URL not found: ${family} ${weight}`);
-  }
-
-  return fetch(match[1], { cache: "force-cache" }).then((r) => r.arrayBuffer());
-}
 
 type AnswerRow = {
   number: string;

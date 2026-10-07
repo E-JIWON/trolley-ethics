@@ -42,6 +42,13 @@ const CATEGORY_MAP: Record<string, string[]> = {
   절차: ["계약주의", "공평주의", "절차적 정의"],
 };
 
+const CATEGORY_LABEL: Record<string, string> = {
+  결과: "결과주의",
+  원칙: "의무론",
+  관계: "관계 윤리",
+  절차: "절차적 정의",
+};
+
 const COORD_WEIGHTS: Record<string, { x: number; y: number }> = {
   결과: { x: -1, y: -1 },
   원칙: { x: 1, y: -0.3 },
@@ -638,9 +645,15 @@ export default function ResultAnalysis() {
       tagCount[tag] = (tagCount[tag] || 0) + 1;
     });
   });
-  const sortedTags = Object.entries(tagCount).sort((a, b) => b[1] - a[1]);
+  const topCat = Object.entries(score).sort((a, b) => b[1] - a[1])[0][0];
+  const inTopCat = (tag: string) => (CATEGORY_MAP[topCat]?.includes(tag) ? 1 : 0);
+  // 동점이면 우세 축에 속한 이론을 앞에
+  const sortedTags = Object.entries(tagCount).sort(
+    (a, b) => b[1] - a[1] || inTopCat(b[0]) - inTopCat(a[0])
+  );
   const maxCount = sortedTags[0]?.[1] || 1;
-  const topTagName = sortedTags[0]?.[0] ?? "—";
+  const topTagName =
+    profile.key === "흔들리는" ? "혼합" : CATEGORY_LABEL[topCat] ?? "—";
 
   const inconsistencies: { type: string; desc: string }[] = [];
   if (answers[1]?.key === "switch" && answers[2]?.key === "nothing") {
@@ -674,9 +687,9 @@ export default function ResultAnalysis() {
             {profile.name[0]}
           </div>
         </div>
-        <h2 className="fade-up fade-up-delay-1 serif text-[44px] md:text-[72px] leading-[0.98] tracking-[-0.03em] font-medium mb-3">
+        <h1 className="fade-up fade-up-delay-1 serif text-[44px] md:text-[72px] leading-[0.98] tracking-[-0.03em] font-medium mb-3">
           {profile.name}
-        </h2>
+        </h1>
         <div className="fade-up fade-up-delay-2 text-[11px] tracking-[0.3em] uppercase text-accent mb-5">
           {profile.alias}
         </div>

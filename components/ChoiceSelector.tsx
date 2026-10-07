@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Choice } from "@/data/scenarios";
 import { useCountUp } from "./Reveal";
@@ -44,6 +44,19 @@ export default function ChoiceSelector({
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [exiting, setExiting] = useState(false);
+
+  // 뒤로 가기 등으로 다시 왔을 때 이미 고른 답을 복원
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(
+        window.localStorage.getItem("trolley-answers") || "{}"
+      )[scenarioId];
+      if (saved?.key && choices.some((c) => c.key === saved.key)) {
+        setSelectedKey(saved.key);
+        setRevealed(true);
+      }
+    } catch {}
+  }, [scenarioId, choices]);
 
   function handleSelect(choice: Choice) {
     if (typeof window === "undefined") return;

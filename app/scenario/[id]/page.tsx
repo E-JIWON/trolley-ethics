@@ -15,7 +15,7 @@ export function generateMetadata({ params }: { params: { id: string } }) {
   const scenario = getScenarioBySlug(params.id);
   if (!scenario) return {};
   return {
-    title: `${scenario.title} — 선로 위의 다섯 사람`,
+    title: `${scenario.title} · 시나리오 ${scenario.number}/0${scenarios.length}`,
     description: scenario.hook,
   };
 }
@@ -44,7 +44,7 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
             href="/"
             className="text-[11px] tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors"
           >
-            ← 목차
+            ← 처음으로
           </Link>
           <div className="text-[11px] tracking-[0.15em] uppercase text-muted tabular-nums">
             {scenario.number} / {String(scenarios.length).padStart(2, "0")}
