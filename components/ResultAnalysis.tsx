@@ -422,7 +422,7 @@ function ChapterHead({ no, title }: { no: string; title: string }) {
       <div className="text-[10px] tracking-[0.3em] uppercase text-muted/70 tabular-nums">
         No. {no}
       </div>
-      <h3 className="serif text-[20px] md:text-[24px] tracking-[-0.01em] leading-tight">
+      <h3 className="serif text-[18px] md:text-[20px] tracking-[-0.01em] leading-tight">
         {title}
       </h3>
     </div>
@@ -687,13 +687,13 @@ export default function ResultAnalysis() {
             {profile.name[0]}
           </div>
         </div>
-        <h1 className="fade-up fade-up-delay-1 serif text-[44px] md:text-[72px] leading-[0.98] tracking-[-0.03em] font-medium mb-3">
+        <h1 className="fade-up fade-up-delay-1 serif text-[34px] md:text-[52px] leading-[1.05] tracking-[-0.03em] font-medium mb-3">
           {profile.name}
         </h1>
         <div className="fade-up fade-up-delay-2 text-[11px] tracking-[0.3em] uppercase text-accent mb-5">
           {profile.alias}
         </div>
-        <p className="fade-up fade-up-delay-3 serif text-lg md:text-xl text-ink/90 leading-[1.45] italic max-w-[28ch]">
+        <p className="fade-up fade-up-delay-3 serif text-base md:text-lg text-ink/90 leading-[1.5] italic max-w-[32ch]">
           — {profile.subtitle}
         </p>
       </section>
@@ -738,7 +738,7 @@ export default function ResultAnalysis() {
             <div className="text-[10px] tracking-[0.25em] uppercase text-muted shrink-0 mt-1.5">
               모토
             </div>
-            <p className="serif text-[20px] md:text-[28px] leading-[1.4] italic max-w-[28ch]">
+            <p className="serif text-[17px] md:text-[21px] leading-[1.5] italic max-w-[36ch]">
               "{profile.motto}"
             </p>
           </div>
@@ -761,7 +761,7 @@ export default function ResultAnalysis() {
                   </span>
                 ))}
               </div>
-              <p className="text-[15px] md:text-[16px] leading-[1.9] text-ink/85">
+              <p className="text-[14px] md:text-[15px] leading-[1.85] text-ink/85">
                 {profile.description}
               </p>
             </div>
@@ -774,7 +774,7 @@ export default function ResultAnalysis() {
                     강점
                   </div>
                 </div>
-                <p className="serif text-[17px] md:text-lg leading-snug pl-5">
+                <p className="serif text-[15px] md:text-base leading-snug pl-5">
                   {profile.strength}
                 </p>
               </div>
@@ -785,7 +785,7 @@ export default function ResultAnalysis() {
                     약점
                   </div>
                 </div>
-                <p className="serif text-[17px] md:text-lg leading-snug pl-5">
+                <p className="serif text-[15px] md:text-base leading-snug pl-5">
                   {profile.weakness}
                 </p>
               </div>
@@ -854,7 +854,7 @@ export default function ResultAnalysis() {
               <CoordinateMap coords={coords} />
             </div>
             <div>
-              <p className="serif text-lg md:text-xl leading-[1.55] mb-4 text-ink/90">
+              <p className="serif text-base md:text-lg leading-[1.55] mb-4 text-ink/90">
                 붉은 점이 당신의 위치입니다.
               </p>
               <p className="text-[14px] leading-[1.85] text-ink/70 max-w-prose">

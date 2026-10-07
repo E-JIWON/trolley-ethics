@@ -118,7 +118,7 @@ export default function ChoiceSelector({
             onClick={() => handleSelect(choice)}
             disabled={selectedKey !== null}
             className={[
-              "w-full text-left p-6 md:p-7 transition-all group border",
+              "w-full text-left p-5 md:p-6 transition-all group border",
               isSelected
                 ? "border-ink bg-white"
                 : isOther
@@ -130,7 +130,7 @@ export default function ChoiceSelector({
             <div className="flex items-start gap-5">
               <div
                 className={[
-                  "serif text-lg tabular-nums shrink-0 mt-0.5",
+                  "serif text-base tabular-nums shrink-0 mt-0.5",
                   isSelected ? "text-accent" : "text-muted/50",
                 ].join(" ")}
               >
@@ -139,13 +139,13 @@ export default function ChoiceSelector({
               <div className="flex-1">
                 <div
                   className={[
-                    "serif text-xl md:text-2xl leading-snug mb-2 transition-colors",
+                    "serif text-base md:text-lg leading-snug mb-1.5 transition-colors",
                     isSelected ? "text-ink" : "group-hover:text-accent",
                   ].join(" ")}
                 >
                   {choice.label}
                 </div>
-                <div className="text-[14px] text-muted leading-relaxed">
+                <div className="text-[13px] text-muted leading-relaxed">
                   {choice.sub}
                 </div>
 

@@ -52,13 +52,13 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
         </div>
       </header>
 
-      <article className="max-w-prose mx-auto px-6 md:px-10 py-16 md:py-24">
+      <article className="max-w-prose mx-auto px-6 md:px-10 py-12 md:py-16">
         {/* 제목부 */}
         <div className="fade-up mb-12">
           <div className="text-[11px] tracking-[0.25em] uppercase text-muted mb-6">
             시나리오 {scenario.number} · {scenario.eyebrow}
           </div>
-          <h1 className="serif text-[40px] md:text-[56px] leading-[1.05] tracking-[-0.02em] font-medium mb-6">
+          <h1 className="serif text-[30px] md:text-[40px] leading-[1.15] tracking-[-0.02em] font-medium mb-6">
             {scenario.title}
           </h1>
           <div className="text-sm text-muted italic serif">
@@ -69,7 +69,7 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
         <div className="rule mb-12 fade-up fade-up-delay-1" />
 
         {/* 훅 */}
-        <p className="serif fade-up fade-up-delay-1 text-2xl md:text-[28px] leading-[1.5] tracking-[-0.01em] text-ink mb-12 italic">
+        <p className="serif fade-up fade-up-delay-1 text-lg md:text-[21px] leading-[1.55] tracking-[-0.01em] text-ink mb-12 italic">
           {scenario.hook}
         </p>
 
@@ -85,7 +85,7 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
           <div className="text-[11px] tracking-[0.25em] uppercase text-muted mb-4">
             질문
           </div>
-          <h2 className="serif text-3xl md:text-4xl leading-[1.3] tracking-[-0.01em]">
+          <h2 className="serif text-xl md:text-2xl leading-[1.4] tracking-[-0.01em]">
             {scenario.question}
           </h2>
         </div>
