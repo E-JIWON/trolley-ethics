@@ -31,7 +31,7 @@ export default function ShareButton({ title, text, url, className = "" }: Props)
     <button
       type="button"
       onClick={share}
-      className={`inline-flex items-center gap-2 border border-ink/20 px-3.5 py-2 text-[12px] tracking-wide text-muted hover:border-ink hover:text-ink transition-colors ${className}`}
+      className={`inline-flex items-center gap-1.5 text-[11px] tracking-[0.15em] uppercase text-muted underline decoration-ink/20 underline-offset-4 hover:text-ink hover:decoration-ink transition-colors ${className}`}
     >
       <span aria-hidden>↗</span>
       {copied ? "링크 복사됨" : "이 질문 공유"}

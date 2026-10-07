@@ -108,7 +108,7 @@ export default function ChoiceSelector({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       {choices.map((choice, idx) => {
         const isSelected = selectedKey === choice.key;
         const isOther = selectedKey !== null && !isSelected;
@@ -120,7 +120,7 @@ export default function ChoiceSelector({
             onClick={() => handleSelect(choice)}
             disabled={selectedKey !== null}
             className={[
-              "w-full text-left p-4 md:p-5 transition-all group border",
+              "w-full text-left px-4 py-3 md:px-5 md:py-3.5 transition-all group border",
               isSelected
                 ? "border-ink bg-white"
                 : isOther
@@ -129,10 +129,10 @@ export default function ChoiceSelector({
               selectedKey === null ? "cursor-pointer" : "cursor-default",
             ].join(" ")}
           >
-            <div className="flex items-start gap-5">
+            <div className="flex items-start gap-3.5">
               <div
                 className={[
-                  "serif text-base tabular-nums shrink-0 mt-0.5",
+                  "serif text-[13px] tabular-nums shrink-0 mt-[3px]",
                   isSelected ? "text-accent" : "text-muted/50",
                 ].join(" ")}
               >
@@ -141,7 +141,7 @@ export default function ChoiceSelector({
               <div className="flex-1">
                 <div
                   className={[
-                    "serif text-[15px] md:text-[17px] leading-snug mb-1 transition-colors",
+                    "serif text-[14.5px] md:text-[15.5px] leading-snug mb-0.5 transition-colors",
                     isSelected ? "text-ink" : "group-hover:text-accent",
                   ].join(" ")}
                 >
@@ -149,16 +149,16 @@ export default function ChoiceSelector({
                 </div>
                 <div
                   className={[
-                    "text-[13px] leading-relaxed mb-0.5",
+                    "text-[12px] leading-snug",
                     isSelected ? "text-accent" : "text-ink/75",
                   ].join(" ")}
                 >
                   → {choice.outcome}
                 </div>
-                <div className="text-[12.5px] text-muted leading-relaxed">{choice.sub}</div>
+                <div className="text-[11.5px] text-muted leading-snug">{choice.sub}</div>
 
                 {selectedKey !== null && (
-                  <div className="mt-4 pt-4 border-t border-ink/10 flex items-baseline gap-3">
+                  <div className="mt-2.5 pt-2.5 border-t border-ink/10 flex items-baseline gap-3">
                     <div className="flex-1 h-[3px] bg-line relative overflow-hidden">
                       <div
                         className={[
