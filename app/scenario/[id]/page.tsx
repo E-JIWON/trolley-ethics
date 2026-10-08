@@ -45,7 +45,7 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
 
       {/* 헤더 */}
       <header className="border-b border-line">
-        <div className="max-w-prose mx-auto px-6 md:px-10 py-5 flex items-center justify-between">
+        <div className="max-w-prose lg:max-w-[1080px] mx-auto px-6 md:px-10 py-4 flex items-center justify-between">
           <Link href="/" className="text-[11px] tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors">
             ← 처음으로
           </Link>
@@ -55,57 +55,61 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
         </div>
       </header>
 
-      <article className="max-w-prose mx-auto px-6 md:px-10 pt-10 md:pt-14 pb-16">
-        {/* 제목부 */}
-        {/* 묶음 1 · 제목 — 안쪽 간격은 좁게(눈썹·제목·출처), 다음 묶음까지는 넓게 */}
-        <div className="fade-up mb-12 md:mb-14">
-          <div className="text-[11px] tracking-[0.25em] uppercase text-muted mb-2.5">
-            질문 {scenario.number} · {scenario.eyebrow}
-            <span className="normal-case tracking-normal serif italic text-muted/80 ml-2">{scenario.attribution}</span>
+      {/* PC: 왼쪽 본문 · 오른쪽 질문과 선택지(고정). 모바일: 한 줄로 이어짐 */}
+      <article className="max-w-prose lg:max-w-[1080px] mx-auto px-6 md:px-10 pt-8 md:pt-10 lg:pt-14 pb-14 lg:grid lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-x-16 xl:gap-x-20">
+        {/* 묶음 1 · 제목 · 훅 · 본문 */}
+        <div className="lg:col-start-1 lg:row-start-1">
+          <div className="fade-up mb-8 md:mb-10">
+            <div className="text-[11px] tracking-[0.25em] uppercase text-muted mb-2.5">
+              질문 {scenario.number} · {scenario.eyebrow}
+              <span className="normal-case tracking-normal serif italic text-muted/80 ml-2">{scenario.attribution}</span>
+            </div>
+            <h1 className="serif text-[26px] md:text-[32px] leading-[1.2] tracking-[-0.02em] font-medium">
+              {scenario.title}
+            </h1>
           </div>
-          <h1 className="serif text-[26px] md:text-[32px] leading-[1.2] tracking-[-0.02em] font-medium">
-            {scenario.title}
-          </h1>
-        </div>
 
-        {/* 묶음 2 · 훅 */}
-        <p className="serif fade-up fade-up-delay-1 text-[17px] md:text-[19px] leading-[1.55] tracking-[-0.01em] text-ink mb-10 md:mb-12 italic">
-          {scenario.hook}
-        </p>
+          <p className="serif fade-up fade-up-delay-1 text-[17px] md:text-[19px] leading-[1.55] tracking-[-0.01em] text-ink mb-7 md:mb-8 italic">
+            {scenario.hook}
+          </p>
 
-        {/* 묶음 3 · 본문 */}
-        <div className="editorial-body fade-up fade-up-delay-2 mb-14 md:mb-16">
-          {scenario.body.map((paragraph, i) => (
-            <p key={i}>
-              <Em>{paragraph}</Em>
-            </p>
-          ))}
-        </div>
-
-        {/* 묶음 4 · 질문 + 선택지 */}
-        <div className="fade-up fade-up-delay-3 mb-7">
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-[11px] tracking-[0.25em] uppercase text-muted">질문</div>
-            <ShareButton
-              title={`${scenario.question} — 선로 위의 다섯 사람`}
-              text={`너는 이 질문에 뭐라고 답할래? "${scenario.question}"`}
-              url={`/scenario/${scenario.slug}`}
-            />
+          <div className="editorial-body fade-up fade-up-delay-2 mb-10 lg:mb-12">
+            {scenario.body.map((paragraph, i) => (
+              <p key={i}>
+                <Em>{paragraph}</Em>
+              </p>
+            ))}
           </div>
-          <h2 className="serif text-lg md:text-[22px] leading-[1.4] tracking-[-0.01em]">{scenario.question}</h2>
         </div>
 
-        <div className="fade-up fade-up-delay-3 mb-16 md:mb-20">
-          <ChoiceSelector
-            scenarioId={scenario.id}
-            choices={scenario.choices}
-            nextSlug={next?.slug ?? null}
-            pctNote={scenario.pctNote}
-          />
-        </div>
+        {/* 묶음 2 · 질문 + 선택지 — PC에서는 오른쪽에 붙어 따라온다 */}
+        <aside className="mb-12 lg:mb-0 lg:col-start-2 lg:row-start-1 lg:row-span-2">
+          <div className="lg:sticky lg:top-10 lg:border-l lg:border-line lg:pl-10 xl:pl-12">
+            <div className="fade-up fade-up-delay-3 mb-5">
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-[11px] tracking-[0.25em] uppercase text-muted">질문</div>
+                <ShareButton
+                  title={`${scenario.question} — 선로 위의 다섯 사람`}
+                  text={`너는 이 질문에 뭐라고 답할래? "${scenario.question}"`}
+                  url={`/scenario/${scenario.slug}`}
+                />
+              </div>
+              <h2 className="serif text-lg md:text-[21px] leading-[1.4] tracking-[-0.01em]">{scenario.question}</h2>
+            </div>
 
-        {/* 노트 */}
-        <details className="fade-up group border-t border-ink/15 pt-6">
+            <div className="fade-up fade-up-delay-3">
+              <ChoiceSelector
+                scenarioId={scenario.id}
+                choices={scenario.choices}
+                nextSlug={next?.slug ?? null}
+                pctNote={scenario.pctNote}
+              />
+            </div>
+          </div>
+        </aside>
+
+        {/* 묶음 3 · 노트 */}
+        <details className="fade-up group border-t border-ink/15 pt-5 lg:col-start-1 lg:row-start-2 lg:self-start">
           <summary className="cursor-pointer list-none flex items-center justify-between text-[11px] tracking-[0.25em] uppercase text-muted hover:text-ink transition-colors">
             <span>편집자 주 · 출처</span>
             <span className="serif text-base group-open:rotate-45 transition-transform">+</span>

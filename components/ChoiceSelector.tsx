@@ -108,7 +108,7 @@ export default function ChoiceSelector({
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {choices.map((choice, idx) => {
         const isSelected = selectedKey === choice.key;
         const isOther = selectedKey !== null && !isSelected;
@@ -120,7 +120,7 @@ export default function ChoiceSelector({
             onClick={() => handleSelect(choice)}
             disabled={selectedKey !== null}
             className={[
-              "w-full text-left pl-4 md:pl-5 py-1 border-l-2 transition-colors group",
+              "w-full text-left pl-4 py-0.5 border-l-2 transition-colors group",
               isSelected
                 ? "border-accent"
                 : isOther
@@ -129,20 +129,23 @@ export default function ChoiceSelector({
               selectedKey === null ? "cursor-pointer" : "cursor-default",
             ].join(" ")}
           >
-            <div
-              className={[
-                "serif text-[16px] md:text-[17px] leading-snug transition-colors",
-                isSelected ? "text-accent" : "text-ink group-hover:text-accent",
-              ].join(" ")}
-            >
-              {choice.label}
-              {isSelected && <span className="ml-2 text-[13px]">✓</span>}
+            {/* 1줄: 선택 — 결과 / 2줄: 그 논리 */}
+            <div className="flex items-baseline flex-wrap gap-x-2.5 gap-y-0.5">
+              <span
+                className={[
+                  "serif text-[16px] md:text-[17px] leading-snug transition-colors",
+                  isSelected ? "text-accent" : "text-ink group-hover:text-accent",
+                ].join(" ")}
+              >
+                {choice.label}
+                {isSelected && <span className="ml-1.5 text-[13px]">✓</span>}
+              </span>
+              <span className="text-[12.5px] leading-snug text-ink/60">→ {choice.outcome}</span>
             </div>
-            <div className="mt-1 text-[12.5px] leading-snug text-ink/70">→ {choice.outcome}</div>
-            <div className="mt-0.5 text-[12px] leading-snug text-muted">{choice.sub}</div>
+            <div className="mt-1 text-[12px] leading-snug text-muted">{choice.sub}</div>
 
             {selectedKey !== null && (
-              <div className="mt-3 flex items-baseline gap-3 pr-1">
+              <div className="mt-2 flex items-baseline gap-3 pr-1">
                 <div className="flex-1 h-[3px] bg-line relative overflow-hidden">
                   <div
                     className={[
@@ -168,14 +171,14 @@ export default function ChoiceSelector({
       })}
 
       {selectedKey !== null && (
-        <div className="pt-8 fade-up">
-          <p className="text-[12.5px] text-muted mb-5 leading-relaxed">
+        <div className="pt-5 fade-up">
+          <p className="text-[12.5px] text-muted mb-4 leading-relaxed">
             막대는 같은 답을 한 사람의 비율. {pctNote}
           </p>
           <button
             onClick={handleNext}
             disabled={exiting}
-            className="w-full bg-ink text-paper py-4 text-sm tracking-wide hover:bg-accent transition-colors disabled:opacity-50"
+            className="w-full bg-ink text-paper py-3.5 text-sm tracking-wide hover:bg-accent transition-colors disabled:opacity-50"
           >
             {nextSlug ? "다음 시나리오로 →" : "결과 보기 →"}
           </button>
