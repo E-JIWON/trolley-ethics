@@ -60,7 +60,7 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
         <article className="w-full max-w-prose lg:max-w-[1080px] mx-auto px-6 md:px-10 pt-8 md:pt-10 lg:py-14 pb-14 lg:grid lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-x-16 xl:gap-x-20">
           {/* 묶음 1 · 제목 · 훅 · 본문 */}
           <div className="lg:col-start-1 lg:row-start-1">
-            <div className="fade-up mb-8 md:mb-10">
+            <div className="mb-8 md:mb-10">
               <div className="text-[11px] tracking-[0.25em] uppercase text-muted mb-2.5">
                 질문 {scenario.number} · {scenario.eyebrow}
                 <span className="normal-case tracking-normal serif italic text-muted/80 ml-2">{scenario.attribution}</span>
@@ -70,11 +70,11 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
               </h1>
             </div>
 
-            <p className="serif fade-up fade-up-delay-1 text-[17px] md:text-[19px] leading-[1.55] tracking-[-0.01em] text-ink mb-7 md:mb-8 italic">
+            <p className="serif text-[17px] md:text-[19px] leading-[1.55] tracking-[-0.01em] text-ink mb-7 md:mb-8 italic">
               {scenario.hook}
             </p>
 
-            <div className="editorial-body fade-up fade-up-delay-2 mb-10 lg:mb-12">
+            <div className="editorial-body mb-10 lg:mb-12">
               {scenario.body.map((paragraph, i) => (
                 <p key={i}>
                   <Em>{paragraph}</Em>
@@ -86,7 +86,7 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
           {/* 묶음 2 · 질문 + 선택지 — PC에서는 오른쪽에 붙어 따라온다 */}
           <aside className="mb-12 lg:mb-0 lg:col-start-2 lg:row-start-1 lg:row-span-2">
             <div className="lg:sticky lg:top-10 lg:border-l lg:border-line lg:pl-10 xl:pl-12">
-              <div className="fade-up fade-up-delay-3 mb-5">
+              <div className="mb-5">
                 <div className="flex items-center justify-between mb-2">
                   <div className="text-[11px] tracking-[0.25em] uppercase text-muted">질문</div>
                   <ShareButton
@@ -98,7 +98,7 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
                 <h2 className="serif text-lg md:text-[21px] leading-[1.4] tracking-[-0.01em]">{scenario.question}</h2>
               </div>
 
-              <div className="fade-up fade-up-delay-3">
+              <div>
                 <ChoiceSelector
                   scenarioId={scenario.id}
                   choices={scenario.choices}
@@ -110,7 +110,7 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
           </aside>
 
           {/* 묶음 3 · 노트 */}
-          <details className="fade-up group border-t border-ink/15 pt-5 lg:col-start-1 lg:row-start-2 lg:self-start">
+          <details className="group border-t border-ink/15 pt-5 lg:col-start-1 lg:row-start-2 lg:self-start">
             <summary className="cursor-pointer list-none flex items-center justify-between text-[11px] tracking-[0.25em] uppercase text-muted hover:text-ink transition-colors">
               <span>편집자 주 · 출처</span>
               <span className="serif text-base group-open:rotate-45 transition-transform">+</span>

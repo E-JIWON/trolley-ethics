@@ -77,34 +77,15 @@ export default function ChoiceSelector({
     window.setTimeout(() => setRevealed(true), 60);
   }
 
+  // 다음 페이지를 미리 받아 두어 버튼을 누르면 바로 넘어가게
+  useEffect(() => {
+    router.prefetch(nextSlug ? `/scenario/${nextSlug}` : "/result");
+  }, [router, nextSlug]);
+
   function handleNext() {
     if (exiting) return;
     setExiting(true);
-
-    const reduced =
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-
-    if (typeof window !== "undefined" && !reduced) {
-      const main = document.querySelector("main") as HTMLElement | null;
-      if (main) {
-        main.style.transition =
-          "opacity 320ms ease-in, transform 480ms cubic-bezier(0.4, 0, 0.85, 0.5)";
-        main.style.transform = "translateY(-100vh)";
-        main.style.opacity = "0";
-      }
-    }
-
-    window.setTimeout(
-      () => {
-        if (nextSlug) {
-          router.push(`/scenario/${nextSlug}`);
-        } else {
-          router.push("/result");
-        }
-      },
-      reduced ? 0 : 460
-    );
+    router.push(nextSlug ? `/scenario/${nextSlug}` : "/result");
   }
 
   return (
