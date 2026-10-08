@@ -108,7 +108,7 @@ export default function ChoiceSelector({
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-5">
       {choices.map((choice, idx) => {
         const isSelected = selectedKey === choice.key;
         const isOther = selectedKey !== null && !isSelected;
@@ -120,84 +120,56 @@ export default function ChoiceSelector({
             onClick={() => handleSelect(choice)}
             disabled={selectedKey !== null}
             className={[
-              "w-full text-left px-4 py-3 md:px-5 md:py-3.5 transition-all group border",
+              "w-full text-left pl-4 md:pl-5 py-1 border-l-2 transition-colors group",
               isSelected
-                ? "border-ink bg-white"
+                ? "border-accent"
                 : isOther
-                ? "border-ink/10 bg-paper opacity-60"
-                : "border-ink/15 bg-paper hover:border-ink hover:bg-white",
+                ? "border-ink/10 opacity-50"
+                : "border-ink/15 hover:border-ink",
               selectedKey === null ? "cursor-pointer" : "cursor-default",
             ].join(" ")}
           >
-            <div className="flex items-start gap-3.5">
-              <div
-                className={[
-                  "serif text-[13px] tabular-nums shrink-0 mt-[3px]",
-                  isSelected ? "text-accent" : "text-muted/50",
-                ].join(" ")}
-              >
-                {String.fromCharCode(65 + idx)}.
-              </div>
-              <div className="flex-1">
-                <div
-                  className={[
-                    "serif text-[14.5px] md:text-[15.5px] leading-snug mb-0.5 transition-colors",
-                    isSelected ? "text-ink" : "group-hover:text-accent",
-                  ].join(" ")}
-                >
-                  {choice.label}
-                </div>
-                <div
-                  className={[
-                    "text-[12px] leading-snug",
-                    isSelected ? "text-accent" : "text-ink/75",
-                  ].join(" ")}
-                >
-                  → {choice.outcome}
-                </div>
-                <div className="text-[11.5px] text-muted leading-snug">{choice.sub}</div>
-
-                {selectedKey !== null && (
-                  <div className="mt-2.5 pt-2.5 border-t border-ink/10 flex items-baseline gap-3">
-                    <div className="flex-1 h-[3px] bg-line relative overflow-hidden">
-                      <div
-                        className={[
-                          "absolute inset-y-0 left-0 transition-[width] duration-[1100ms] ease-out",
-                          isSelected ? "bg-accent" : "bg-ink/30",
-                        ].join(" ")}
-                        style={{
-                          width: revealed ? `${choice.globalPct}%` : "0%",
-                          transitionDelay: `${stagger}ms`,
-                        }}
-                      />
-                    </div>
-                    <ChoicePct
-                      pct={choice.globalPct}
-                      revealed={revealed}
-                      delay={stagger}
-                      isSelected={isSelected}
-                    />
-                  </div>
-                )}
-              </div>
-              <div
-                className={[
-                  "serif transition-all",
-                  isSelected
-                    ? "text-accent"
-                    : "text-muted/30 group-hover:text-accent group-hover:translate-x-1",
-                ].join(" ")}
-              >
-                {isSelected ? "✓" : "→"}
-              </div>
+            <div
+              className={[
+                "serif text-[16px] md:text-[17px] leading-snug transition-colors",
+                isSelected ? "text-accent" : "text-ink group-hover:text-accent",
+              ].join(" ")}
+            >
+              {choice.label}
+              {isSelected && <span className="ml-2 text-[13px]">✓</span>}
             </div>
+            <div className="mt-1 text-[12.5px] leading-snug text-ink/70">→ {choice.outcome}</div>
+            <div className="mt-0.5 text-[12px] leading-snug text-muted">{choice.sub}</div>
+
+            {selectedKey !== null && (
+              <div className="mt-3 flex items-baseline gap-3 pr-1">
+                <div className="flex-1 h-[3px] bg-line relative overflow-hidden">
+                  <div
+                    className={[
+                      "absolute inset-y-0 left-0 transition-[width] duration-[1100ms] ease-out",
+                      isSelected ? "bg-accent" : "bg-ink/30",
+                    ].join(" ")}
+                    style={{
+                      width: revealed ? `${choice.globalPct}%` : "0%",
+                      transitionDelay: `${stagger}ms`,
+                    }}
+                  />
+                </div>
+                <ChoicePct
+                  pct={choice.globalPct}
+                  revealed={revealed}
+                  delay={stagger}
+                  isSelected={isSelected}
+                />
+              </div>
+            )}
           </button>
         );
       })}
 
       {selectedKey !== null && (
-        <div className="pt-6 fade-up">
-          <p className="text-[13px] text-muted mb-4 leading-relaxed">
+        <div className="pt-8 fade-up">
+          <p className="text-[12.5px] text-muted mb-5 leading-relaxed">
             막대는 같은 답을 한 사람의 비율. {pctNote}
           </p>
           <button

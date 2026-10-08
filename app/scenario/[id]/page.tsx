@@ -45,7 +45,7 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
 
       {/* 헤더 */}
       <header className="border-b border-line">
-        <div className="max-w-wide mx-auto px-6 md:px-10 py-5 flex items-center justify-between">
+        <div className="max-w-prose mx-auto px-6 md:px-10 py-5 flex items-center justify-between">
           <Link href="/" className="text-[11px] tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors">
             ← 처음으로
           </Link>
@@ -55,27 +55,26 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
         </div>
       </header>
 
-      <article className="max-w-prose mx-auto px-6 md:px-10 py-8 md:py-12">
+      <article className="max-w-prose mx-auto px-6 md:px-10 pt-10 md:pt-14 pb-16">
         {/* 제목부 */}
-        <div className="fade-up mb-7">
-          <div className="text-[11px] tracking-[0.25em] uppercase text-muted mb-3">
+        {/* 묶음 1 · 제목 — 안쪽 간격은 좁게(눈썹·제목·출처), 다음 묶음까지는 넓게 */}
+        <div className="fade-up mb-12 md:mb-14">
+          <div className="text-[11px] tracking-[0.25em] uppercase text-muted mb-2.5">
             질문 {scenario.number} · {scenario.eyebrow}
+            <span className="normal-case tracking-normal serif italic text-muted/80 ml-2">{scenario.attribution}</span>
           </div>
-          <h1 className="serif text-[26px] md:text-[32px] leading-[1.2] tracking-[-0.02em] font-medium mb-3">
+          <h1 className="serif text-[26px] md:text-[32px] leading-[1.2] tracking-[-0.02em] font-medium">
             {scenario.title}
           </h1>
-          <div className="text-sm text-muted italic serif">{scenario.attribution}</div>
         </div>
 
-        <div className="rule mb-7 fade-up fade-up-delay-1" />
-
-        {/* 훅 */}
-        <p className="serif fade-up fade-up-delay-1 text-[17px] md:text-[19px] leading-[1.55] tracking-[-0.01em] text-ink mb-7 italic">
+        {/* 묶음 2 · 훅 */}
+        <p className="serif fade-up fade-up-delay-1 text-[17px] md:text-[19px] leading-[1.55] tracking-[-0.01em] text-ink mb-10 md:mb-12 italic">
           {scenario.hook}
         </p>
 
-        {/* 본문 */}
-        <div className="editorial-body fade-up fade-up-delay-2 mb-10">
+        {/* 묶음 3 · 본문 */}
+        <div className="editorial-body fade-up fade-up-delay-2 mb-14 md:mb-16">
           {scenario.body.map((paragraph, i) => (
             <p key={i}>
               <Em>{paragraph}</Em>
@@ -83,8 +82,8 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
           ))}
         </div>
 
-        {/* 질문 */}
-        <div className="fade-up fade-up-delay-3 mb-6">
+        {/* 묶음 4 · 질문 + 선택지 */}
+        <div className="fade-up fade-up-delay-3 mb-7">
           <div className="flex items-center justify-between mb-2">
             <div className="text-[11px] tracking-[0.25em] uppercase text-muted">질문</div>
             <ShareButton
@@ -96,8 +95,7 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
           <h2 className="serif text-lg md:text-[22px] leading-[1.4] tracking-[-0.01em]">{scenario.question}</h2>
         </div>
 
-        {/* 선택지 */}
-        <div className="fade-up fade-up-delay-3 mb-12">
+        <div className="fade-up fade-up-delay-3 mb-16 md:mb-20">
           <ChoiceSelector
             scenarioId={scenario.id}
             choices={scenario.choices}
