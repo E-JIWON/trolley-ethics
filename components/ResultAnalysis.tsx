@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { scenarios, getScenarioBySlug } from "@/data/scenarios";
 import Reveal, { useCountUp, useInView } from "./Reveal";
@@ -18,7 +18,6 @@ const CATEGORY_MAP: Record<Cat, string[]> = {
   관계: ["덕 윤리", "관계 윤리"],
   절차: ["계약주의", "공평주의", "절차적 정의"],
 };
-const CATEGORY_LABEL: Record<Cat, string> = { 결과: "결과주의", 원칙: "의무론", 관계: "관계 윤리", 절차: "절차적 정의" };
 const COORD: Record<Cat, { x: number; y: number }> = {
   결과: { x: -1, y: -1 },
   원칙: { x: 1, y: -0.3 },
@@ -198,24 +197,35 @@ const idOf = (slug: string) => getScenarioBySlug(slug)?.id ?? -1;
 
 /* ───────────────────────── 조각 ───────────────────────── */
 
-function ChapterHead({ no, title }: { no: string; title: string }) {
-  return (
-    <div className="mb-6 flex items-baseline gap-3">
-      <div className="text-[10px] tracking-[0.3em] uppercase text-muted/70 tabular-nums">No. {no}</div>
-      <h3 className="serif text-[18px] md:text-[20px] tracking-[-0.01em] leading-tight">{title}</h3>
-    </div>
-  );
-}
-const SECTION = "max-w-wide mx-auto px-6 md:px-10 py-8 md:py-10";
+const SECTION = "max-w-wide mx-auto px-6 md:px-10 py-12 md:py-16";
 
-function StatRarity({ pct }: { pct: number }) {
+function Kicker({ children }: { children: ReactNode }) {
+  return <div className="text-[11px] tracking-[0.25em] uppercase text-muted mb-3">{children}</div>;
+}
+
+function SectionTitle({ children }: { children: ReactNode }) {
+  return <h2 className="serif text-[22px] md:text-[26px] leading-[1.3] tracking-[-0.02em] mb-8 md:mb-10">{children}</h2>;
+}
+
+function ScaleBar({ label, hint, share, strongest, delay }: { label: string; hint: string; share: number; strongest: boolean; delay: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref);
-  const v = useCountUp(pct, inView, 1100);
+  const v = useCountUp(share, inView, 1100, delay);
   return (
     <div ref={ref}>
-      <div className="text-[10px] tracking-[0.25em] uppercase text-muted mb-1.5">희소성 (추정)</div>
-      <div className="serif text-[28px] tabular-nums text-ink leading-none">{v}<span className="text-base text-muted ml-0.5">%</span></div>
+      <div className="flex items-baseline justify-between mb-2">
+        <div className="flex items-baseline gap-2.5">
+          <span className={["serif text-[17px] md:text-[18px]", strongest ? "text-accent" : "text-ink"].join(" ")}>{label}</span>
+          <span className="text-[12.5px] text-muted">{hint}</span>
+        </div>
+        <span className={["serif tabular-nums text-[17px]", strongest ? "text-accent" : "text-ink/70"].join(" ")}>{v}%</span>
+      </div>
+      <div className="h-[3px] bg-line relative overflow-hidden">
+        <div
+          className={["absolute inset-y-0 left-0 transition-[width] duration-[1100ms] ease-out", strongest ? "bg-accent" : "bg-ink/40"].join(" ")}
+          style={{ width: inView ? `${share}%` : "0%", transitionDelay: `${delay}ms` }}
+        />
+      </div>
     </div>
   );
 }
@@ -224,16 +234,16 @@ function CoordinateMap({ coords }: { coords: { x: number; y: number } }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref);
   return (
-    <div ref={ref} className="relative w-full max-w-[260px] mx-auto">
+    <div ref={ref} className="relative w-full max-w-[220px] mx-auto">
       {[["보편", "-top-6 left-1/2 -translate-x-1/2"], ["관계", "-bottom-6 left-1/2 -translate-x-1/2"], ["결과", "top-1/2 -left-10 -translate-y-1/2"], ["원칙", "top-1/2 -right-10 -translate-y-1/2"]].map(([t, c]) => (
-        <div key={t} className={`absolute ${c} text-[9px] tracking-[0.25em] uppercase text-muted`}>{t}</div>
+        <div key={t} className={`absolute ${c} text-[10px] tracking-[0.2em] text-muted`}>{t}</div>
       ))}
       <div className="aspect-square border border-ink/15 relative">
         <div className="absolute inset-x-0 top-1/2 h-px bg-ink/10" />
         <div className="absolute inset-y-0 left-1/2 w-px bg-ink/10" />
-        {PROFILES.map((t, i) => (
-          <div key={t.key} title={t.name} className="absolute w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-ink/25 transition-opacity duration-700"
-            style={{ left: `${50 + t.coords.x * 40}%`, top: `${50 + t.coords.y * 40}%`, opacity: inView ? 1 : 0, transitionDelay: `${400 + i * 50}ms` }} />
+        {PROFILES.map((t) => (
+          <div key={t.key} title={t.name} className="absolute w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full bg-ink/20"
+            style={{ left: `${50 + t.coords.x * 40}%`, top: `${50 + t.coords.y * 40}%` }} />
         ))}
         <div className="absolute w-3 h-3 -ml-[6px] -mt-[6px] rounded-full bg-accent ring-[5px] ring-accent/15 transition-all duration-[1300ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
           style={{ left: inView ? `${50 + coords.x * 40}%` : "50%", top: inView ? `${50 + coords.y * 40}%` : "50%", transitionDelay: inView ? "250ms" : "0ms" }} />
@@ -274,7 +284,43 @@ function ShareButton({ profile, answers }: { profile: Profile; answers: Answers 
   );
 }
 
+/** 접어 둔 부록 한 줄 */
+function Appendix({ title, count, children }: { title: string; count?: string; children: ReactNode }) {
+  return (
+    <details className="group border-b border-ink/10">
+      <summary className="cursor-pointer list-none flex items-center justify-between py-5 hover:text-accent transition-colors">
+        <span className="serif text-[16px] md:text-[17px]">
+          {title}
+          {count && <span className="ml-2 text-[12px] text-muted tabular-nums">{count}</span>}
+        </span>
+        <span className="serif text-lg text-muted group-open:rotate-45 transition-transform">+</span>
+      </summary>
+      <div className="pb-8">{children}</div>
+    </details>
+  );
+}
+
 /* ───────────────────────── 본체 ───────────────────────── */
+
+const SCALE_HINT: Record<Cat, string> = {
+  결과: "더 많이 살리는 쪽",
+  원칙: "넘지 않는 선",
+  관계: "내 사람",
+  절차: "정하는 방식",
+};
+const SCALE_LABEL: Record<Cat, string> = { 결과: "결과", 원칙: "원칙", 관계: "관계", 절차: "절차" };
+
+/** 두 답이 어긋나는 지점 — 결과 페이지의 핵심 읽을거리 */
+const MOMENTS: { a: [string, string]; b: [string, string]; title: string; desc: string }[] = [
+  { a: ["trolley", "switch"], b: ["footbridge", "nothing"], title: "레버는 당기고, 사람은 밀지 않았다", desc: "결과는 같아도 방식이 다르면 직관이 달라집니다. 이중결과 원칙의 가장 오래된 사례예요." },
+  { a: ["footbridge", "nothing"], b: ["trapdoor", "press"], title: "밀지는 않았지만, 스위치는 눌렀다", desc: "당신의 거부감은 '수단으로 쓰는 것'보다 '내 몸이 직접 가하는 힘'에서 옵니다." },
+  { a: ["trolley", "switch"], b: ["transplant", "nothing"], title: "숫자는 같은데, 이식은 거부했다", desc: "한 명과 다섯 명. 산수는 같지만 권리와 신뢰의 무게가 계산을 넘어섰습니다." },
+  { a: ["footbridge", "nothing"], b: ["self", "jump"], title: "남은 밀지 않지만, 나는 뛰어내린다", desc: "당신의 '밀지 않는다'는 남의 목숨을 내가 정할 수 없다는 뜻이었습니다." },
+  { a: ["trolley", "nothing"], b: ["villain", "switch"], title: "낯선 사람은 지키고, 범인은 희생시켰다", desc: "당신의 원칙 안에는 '그럴 만한 사람인가'라는 질문이 들어 있습니다." },
+  { a: ["transplant", "nothing"], b: ["lifeboat", "acquit"], title: "의사는 안 되고, 구명보트는 용서했다", desc: "'모두가 같은 처지'라는 조건이 당신의 판단을 바꿉니다." },
+  { a: ["trolley", "switch"], b: ["kin", "nothing"], title: "낯선 이들 앞에선 셈을 했고, 가족 앞에선 멈췄다", desc: "비일관성이라기보다, 어쩌면 인간 도덕의 본질에 가깝습니다." },
+  { a: ["pond", "same"], b: ["kin", "nothing"], title: "먼 아이도 같다면서, 가족은 특별했다", desc: "당신에게 '거리'는 변수가 아니지만 '관계'는 변수입니다." },
+];
 
 export default function ResultAnalysis() {
   const [answers, setAnswers] = useState<Answers | null>(null);
@@ -297,175 +343,182 @@ export default function ResultAnalysis() {
   const score = computeScore(answers);
   const profile = pickProfile(score);
   const coords = computeCoords(score);
-  const topCat = (Object.entries(score) as [Cat, number][]).sort((a, b) => b[1] - a[1])[0][0];
-
-  const tagCount: Record<string, number> = {};
-  Object.values(answers).forEach((a) => a.tags?.forEach((t) => (tagCount[t] = (tagCount[t] || 0) + 1)));
-  const inTop = (t: string) => (CATEGORY_MAP[topCat].includes(t) ? 1 : 0);
-  const sortedTags = Object.entries(tagCount).sort((a, b) => b[1] - a[1] || inTop(b[0]) - inTop(a[0]));
-  const maxCount = sortedTags[0]?.[1] || 1;
+  const totalScore = Object.values(score).reduce((a, b) => a + b, 0) || 1;
+  const cats = (Object.keys(score) as Cat[]).sort((a, b) => score[b] - score[a]);
+  const shares = cats.map((c) => Math.round((score[c] / totalScore) * 100));
 
   const ans = (slug: string) => answers[idOf(slug)]?.key;
-  const notes: { type: string; desc: string }[] = [];
-  if (ans("trolley") === "switch" && ans("footbridge") === "nothing") notes.push({ type: "수단과 부수효과", desc: "레버는 당겼지만 사람은 밀지 않았습니다. 결과가 같아도 행위의 방식이 다르면 직관이 달라진다는 것 — 이중결과 원칙의 고전적 사례." });
-  if (ans("footbridge") === "nothing" && ans("trapdoor") === "press") notes.push({ type: "손이 닿는가", desc: "밀지는 않았지만 스위치는 눌렀습니다. 당신의 거부감은 '수단으로 쓰는 것'보다 '내 몸이 직접 가하는 힘'에서 옵니다." });
-  if (ans("trolley") === "switch" && ans("transplant") === "nothing") notes.push({ type: "산수의 한계", desc: "레버와 이식은 수치상 똑같지만 이식은 거부했어요. 권리와 신뢰의 무게가 효용 계산을 초과한다는 직관." });
-  if (ans("footbridge") === "nothing" && ans("self") === "jump") notes.push({ type: "희생의 주인", desc: "남은 밀지 않지만 자신은 뛰어내립니다. 당신의 '밀지 않는다'는 타인의 목숨을 내가 결정할 수 없다는 뜻이었군요." });
-  if (ans("trolley") === "nothing" && ans("villain") === "switch") notes.push({ type: "자격이라는 변수", desc: "낯선 한 명은 희생시키지 않지만 범인은 희생시킵니다. 당신의 원칙 안에 '마땅함(desert)'이 들어 있습니다." });
-  if (ans("transplant") === "nothing" && ans("lifeboat") === "acquit") notes.push({ type: "같은 배", desc: "의사의 적출은 안 되지만 구명보트의 살인은 용서합니다. '모두가 같은 처지'라는 조건이 당신의 판단을 바꿉니다." });
-  if (ans("trolley") === "switch" && ans("kin") === "nothing") notes.push({ type: "공평성과 사랑", desc: "낯선 사람들에겐 공리주의자였지만 가족 앞에선 멈췄습니다. 비일관성이 아니라 어쩌면 인간 도덕의 본질." });
-  if (ans("pond") === "same" && ans("kin") === "nothing") notes.push({ type: "거리와 관계", desc: "먼 아이에게도 의무가 있다면서 가족은 특별합니다. '거리'는 변수가 아니고 '관계'는 변수라는 것 — 흥미로운 조합입니다." });
+  const labelOf = (slug: string) => answers[idOf(slug)]?.label ?? "";
+  const titleOf = (slug: string) => getScenarioBySlug(slug)?.title ?? "";
+  const moments = MOMENTS.filter((m) => ans(m.a[0]) === m.a[1] && ans(m.b[0]) === m.b[1]).slice(0, 3);
+
+  // 다수와 다른 쪽에 선 답 — 그 선택지를 고른 비율이 35% 미만
+  const minority = scenarios
+    .map((s) => ({ s, a: answers[s.id], p: answers[s.id] ? pct(s.id, answers[s.id].key) : null }))
+    .filter((x): x is { s: typeof x.s; a: Answer; p: number } => !!x.a && x.p !== null && x.p < 35)
+    .sort((a, b) => a.p - b.p);
 
   return (
     <>
-      {/* HERO */}
-      <section className="max-w-wide mx-auto px-6 md:px-10 pt-8 md:pt-10 pb-6">
-        <div className="flex items-start justify-between gap-6 mb-5">
-          <div className="fade-up text-[11px] tracking-[0.3em] uppercase text-muted">당신의 도덕 유형</div>
-          <div className="fade-up fade-up-delay-3 border border-ink/30 w-11 h-11 flex items-center justify-center serif text-xl text-accent shrink-0">{profile.name[0]}</div>
+      {/* 1 · 유형 */}
+      <section className="max-w-wide mx-auto px-6 md:px-10 pt-14 md:pt-20 pb-12 md:pb-16">
+        <div className="fade-up text-[11px] tracking-[0.25em] uppercase text-muted mb-5">
+          {answered}개의 답이 가리킨 곳
         </div>
-        <h1 className="fade-up fade-up-delay-1 serif text-[30px] md:text-[44px] leading-[1.08] tracking-[-0.03em] font-medium mb-3">{profile.name}</h1>
-        <div className="fade-up fade-up-delay-2 text-[11px] tracking-[0.3em] uppercase text-accent mb-4">{profile.alias}</div>
-        <p className="fade-up fade-up-delay-3 serif text-base md:text-lg text-ink/90 leading-[1.5] italic max-w-[32ch]">— {profile.tagline}</p>
+        <h1 className="fade-up fade-up-delay-1 serif text-[40px] md:text-[60px] leading-[1.05] tracking-[-0.03em] font-medium">
+          {profile.name}
+        </h1>
+        <div className="fade-up fade-up-delay-1 mt-3 text-[11px] tracking-[0.3em] uppercase text-accent">{profile.alias}</div>
+        <p className="fade-up fade-up-delay-2 mt-8 md:mt-10 serif italic text-[19px] md:text-[23px] leading-[1.5] tracking-[-0.01em] max-w-[30ch]">
+          “{profile.motto}”
+        </p>
+        <p className="fade-up fade-up-delay-3 mt-6 max-w-prose text-[15px] md:text-[16px] leading-[1.9] text-ink/85">
+          {profile.description}
+        </p>
+        <p className="fade-up fade-up-delay-3 mt-6 text-[12.5px] text-muted">
+          응답자 중 약 <span className="text-ink tabular-nums">{profile.rarityPct}%</span>가 이 유형입니다.
+        </p>
       </section>
 
-      {/* STAT STRIP */}
-      <Reveal>
-        <section className="max-w-wide mx-auto px-6 md:px-10 py-5 border-y border-ink/15 bg-white/40">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-y-5 gap-x-6">
-            <StatRarity pct={profile.rarityPct} />
-            <div><div className="text-[10px] tracking-[0.25em] uppercase text-muted mb-1.5">우세 축</div><div className="serif text-[16px] leading-tight">{profile.key === "흔들리는" ? "혼합" : CATEGORY_LABEL[topCat]}</div></div>
-            <div><div className="text-[10px] tracking-[0.25em] uppercase text-muted mb-1.5">눈여겨볼 지점</div><div className="serif text-[16px] leading-tight">{notes.length === 0 ? "없음" : `${notes.length}건`}</div></div>
-            <div><div className="text-[10px] tracking-[0.25em] uppercase text-muted mb-1.5">응답</div><div className="serif text-[16px] leading-tight tabular-nums">{answered} / {scenarios.length}</div></div>
-          </div>
-        </section>
-      </Reveal>
-
-      {/* MOTTO + 설명 + 강점/약점 (한 섹션) */}
-      <Reveal>
-        <section className={SECTION}>
-          <p className="serif text-[17px] md:text-[21px] leading-[1.5] italic max-w-[36ch] mb-6">"{profile.motto}"</p>
-          <div className="grid md:grid-cols-2 gap-x-12 gap-y-6">
-            <div>
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {sortedTags.slice(0, 3).map(([tag, count]) => (
-                  <span key={tag} className="text-[10px] tracking-[0.15em] uppercase border border-ink/20 px-2 py-1 text-ink/70">{tag} · {count}</span>
-                ))}
-              </div>
-              <p className="text-[14px] md:text-[15px] leading-[1.85] text-ink/85">{profile.description}</p>
-            </div>
-            <div className="space-y-5">
-              <div><div className="text-[10px] tracking-[0.25em] uppercase text-muted mb-1"><span className="serif text-accent mr-1.5">＋</span>강점</div><p className="serif text-[15px] md:text-base leading-snug">{profile.strength}</p></div>
-              <div><div className="text-[10px] tracking-[0.25em] uppercase text-muted mb-1"><span className="serif text-accent/80 mr-1.5">−</span>약점</div><p className="serif text-[15px] md:text-base leading-snug">{profile.weakness}</p></div>
-            </div>
-          </div>
-        </section>
-      </Reveal>
-
-      {/* 답변과 패턴 */}
+      {/* 2 · 네 개의 저울 */}
       <Reveal>
         <section className={SECTION + " border-t border-ink/10"}>
-          <ChapterHead no="01" title="답변과 패턴" />
-          {notes.length > 0 && (
-            <div className="mb-8 space-y-3">
-              {notes.map((n, i) => (
-                <Reveal key={i} delay={i * 100}>
-                  <div className="border-l-2 border-accent pl-4 py-0.5">
-                    <div className="serif text-[15px] mb-1 leading-snug">{n.type}</div>
-                    <p className="text-[13px] leading-[1.7] text-ink/75 max-w-prose">{n.desc}</p>
-                  </div>
-                </Reveal>
+          <Kicker>네 개의 저울</Kicker>
+          <SectionTitle>당신의 답은 이 무게로 기울었습니다</SectionTitle>
+          <div className="grid md:grid-cols-[minmax(0,1fr)_220px] gap-12 md:gap-20 items-center">
+            <div className="space-y-6">
+              {cats.map((c, i) => (
+                <ScaleBar key={c} label={SCALE_LABEL[c]} hint={SCALE_HINT[c]} share={shares[i]} strongest={i === 0 && score[c] > 0} delay={i * 120} />
               ))}
             </div>
-          )}
-          <div className="grid md:grid-cols-2 gap-x-10 gap-y-0 mb-8">
-            {scenarios.map((s) => {
-              const a = answers[s.id];
-              const p = a ? pct(s.id, a.key) : null;
-              return (
-                <div key={s.id} className="flex items-start gap-3 py-2 border-b border-ink/10">
-                  <div className="serif text-muted/50 tabular-nums text-sm w-6 shrink-0 pt-0.5">{s.number}</div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-[13px] mb-0.5 truncate">{s.title}</div>
-                    {a ? <div className="text-[12px] text-muted">{a.label}{p !== null && <span className="text-muted/60 tabular-nums ml-1.5">· {p}%</span>}</div> : <div className="text-[12px] text-muted/50 italic">건너뜀</div>}
+            <div className="px-10 md:px-0 py-6 hidden md:block"><CoordinateMap coords={coords} /></div>
+          </div>
+        </section>
+      </Reveal>
+
+      {/* 3 · 당신이 드러난 순간 */}
+      {moments.length > 0 && (
+        <Reveal>
+          <section className={SECTION + " border-t border-ink/10"}>
+            <Kicker>당신이 드러난 순간</Kicker>
+            <SectionTitle>두 답 사이의 틈</SectionTitle>
+            <div className="space-y-10 md:space-y-12">
+              {moments.map((m) => (
+                <div key={m.title} className="grid md:grid-cols-[240px_minmax(0,1fr)] gap-4 md:gap-12">
+                  <div className="text-[13px] leading-[1.7] text-muted">
+                    <div><span className="text-ink/70">{titleOf(m.a[0])}</span> — <span className="text-ink">{labelOf(m.a[0])}</span></div>
+                    <div><span className="text-ink/70">{titleOf(m.b[0])}</span> — <span className="text-ink">{labelOf(m.b[0])}</span></div>
+                  </div>
+                  <div className="border-l-2 border-accent pl-5">
+                    <h3 className="serif text-[18px] md:text-[20px] leading-[1.4] mb-2">{m.title}</h3>
+                    <p className="text-[14.5px] leading-[1.8] text-ink/75 max-w-prose">{m.desc}</p>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-          <div className="text-[10px] tracking-[0.25em] uppercase text-muted mb-3">윤리 이론별 일치도</div>
-          <div className="space-y-2.5">
-            {sortedTags.map(([tag, count]) => (
-              <div key={tag}>
-                <div className="flex justify-between items-baseline mb-1"><div className="serif text-[14px]">{tag}</div><div className="text-[11px] text-muted tabular-nums">{count}회</div></div>
-                <div className="h-[2px] bg-line"><div className="h-full bg-ink transition-all duration-1000" style={{ width: `${Math.round((count / maxCount) * 100)}%` }} /></div>
+              ))}
+            </div>
+          </section>
+        </Reveal>
+      )}
+
+      {/* 4 · 소수의 편 */}
+      <Reveal>
+        <section className={SECTION + " border-t border-ink/10"}>
+          <Kicker>소수의 편</Kicker>
+          {minority.length === 0 ? (
+            <SectionTitle>{answered}번 모두, 다수와 같은 쪽에 섰습니다</SectionTitle>
+          ) : (
+            <>
+              <SectionTitle>
+                {answered}번 중 <span className="text-accent tabular-nums">{minority.length}</span>번, 대부분의 사람과 다른 답을 했습니다
+              </SectionTitle>
+              <ul className="divide-y divide-ink/10 border-y border-ink/10">
+                {minority.map(({ s, a, p }) => (
+                  <li key={s.id} className="flex items-baseline gap-4 md:gap-6 py-4">
+                    <span className="serif text-[24px] md:text-[28px] tabular-nums text-accent w-14 md:w-16 shrink-0 leading-none">{p}%</span>
+                    <div className="min-w-0">
+                      <div className="serif text-[16px] md:text-[17px] leading-snug">{a.label}</div>
+                      <div className="text-[12.5px] text-muted mt-0.5">{s.title}</div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-4 text-[12px] text-muted">숫자는 같은 답을 한 사람의 비율.</p>
+            </>
+          )}
+        </section>
+      </Reveal>
+
+      {/* 5 · 강점 · 약점 · 닮은 사람 */}
+      <Reveal>
+        <section className={SECTION + " border-t border-ink/10"}>
+          <div className="grid md:grid-cols-2 gap-x-16 gap-y-10">
+            {[
+              ["잘하는 것", profile.strength, null],
+              ["조심할 것", profile.weakness, null],
+              ["닮은 철학자", profile.philosopher.name, profile.philosopher.note],
+              ["닮은 인물", profile.character.name, profile.character.note],
+            ].map(([k, v, note]) => (
+              <div key={k as string}>
+                <Kicker>{k}</Kicker>
+                <p className="serif text-[18px] md:text-[19px] leading-[1.5]">{v}</p>
+                {note && <p className="mt-2 text-[13.5px] leading-[1.75] text-ink/65">{note}</p>}
               </div>
             ))}
           </div>
         </section>
       </Reveal>
 
-      {/* 다른 자리들 — 11 */}
-      <Reveal>
-        <section className={SECTION + " border-t border-ink/10"}>
-          <ChapterHead no="02" title="다른 자리들" />
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-            {PROFILES.map((t, i) => {
-              const isMe = t.key === profile.key;
-              return (
-                <Reveal key={t.key} delay={i * 50}>
-                  <div className={["p-4 border h-full relative", isMe ? "border-ink bg-white" : "border-ink/15 bg-paper hover:border-ink/40"].join(" ")}>
-                    <div className="aspect-square w-9 mb-3 relative border border-ink/10">
-                      <div className="absolute inset-x-0 top-1/2 h-px bg-ink/10" /><div className="absolute inset-y-0 left-1/2 w-px bg-ink/10" />
-                      <div className={["absolute w-1.5 h-1.5 -ml-[3px] -mt-[3px] rounded-full", isMe ? "bg-accent" : "bg-ink/40"].join(" ")} style={{ left: `${50 + t.coords.x * 35}%`, top: `${50 + t.coords.y * 35}%` }} />
+      {/* 6 · 공유 */}
+      <section className="max-w-wide mx-auto px-6 md:px-10 py-10 md:py-12 border-t border-ink/15 space-y-3">
+        <ShareButton profile={profile} answers={answers} />
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button onClick={() => { window.localStorage.removeItem("trolley-answers"); window.location.href = "/"; }} className="flex-1 border border-ink py-3.5 text-sm tracking-wide hover:bg-ink hover:text-paper transition-colors">처음부터 다시</button>
+          <Link href="/" className="flex-1 bg-ink text-paper py-3.5 text-sm tracking-wide hover:bg-accent transition-colors text-center">처음으로</Link>
+        </div>
+      </section>
+
+      {/* 부록 — 궁금한 사람만 */}
+      <section className="max-w-wide mx-auto px-6 md:px-10 pt-6 pb-20">
+        <div className="border-t border-ink/10">
+          <Appendix title="내 답 전체" count={`${answered}/${scenarios.length}`}>
+            <ul className="grid md:grid-cols-2 gap-x-10">
+              {scenarios.map((s) => {
+                const a = answers[s.id];
+                const p = a ? pct(s.id, a.key) : null;
+                return (
+                  <li key={s.id} className="flex items-baseline justify-between gap-4 py-2.5 border-b border-ink/5">
+                    <span className="text-[13.5px] text-ink/70 truncate">{s.title}</span>
+                    {a ? (
+                      <span className="text-[13.5px] shrink-0">{a.label}{p !== null && <span className="text-muted tabular-nums ml-1.5">{p}%</span>}</span>
+                    ) : (
+                      <span className="text-[13px] text-muted/60 italic shrink-0">건너뜀</span>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </Appendix>
+
+          <Appendix title="다른 유형들" count={String(PROFILES.length)}>
+            <ul className="grid md:grid-cols-2 gap-x-10">
+              {PROFILES.map((t) => {
+                const isMe = t.key === profile.key;
+                return (
+                  <li key={t.key} className="py-3 border-b border-ink/5">
+                    <div className="flex items-baseline justify-between gap-3">
+                      <span className={["serif text-[16px]", isMe ? "text-accent" : ""].join(" ")}>
+                        {t.name}{isMe && <span className="ml-2 text-[11px] tracking-[0.15em] text-accent">당신</span>}
+                      </span>
+                      <span className="text-[12px] text-muted tabular-nums">{t.rarityPct}%</span>
                     </div>
-                    <div className={["serif text-[14px] leading-snug mb-0.5", isMe ? "text-accent" : "text-ink"].join(" ")}>{t.name}</div>
-                    <div className="text-[9px] tracking-[0.2em] uppercase text-muted/70 mb-1.5">{t.alias}</div>
-                    <p className="text-[11.5px] leading-[1.6] text-ink/70 italic">"{t.tagline}"</p>
-                    <div className="mt-2 text-[10px] text-muted/60 tabular-nums">{t.rarityPct}%</div>
-                    {isMe && <div className="absolute top-2 right-2 text-[9px] tracking-[0.2em] uppercase text-accent">당신</div>}
-                  </div>
-                </Reveal>
-              );
-            })}
-          </div>
-        </section>
-      </Reveal>
+                    <p className="text-[13px] text-ink/65 mt-0.5">{t.tagline}</p>
+                  </li>
+                );
+              })}
+            </ul>
+          </Appendix>
 
-      {/* 더 깊이 — 접힘 */}
-      <Reveal>
-        <section className={SECTION + " border-t border-ink/10"}>
-          <details className="group">
-            <summary className="cursor-pointer list-none flex items-baseline justify-between gap-3">
-              <ChapterHead no="03" title="더 깊이 — 닮은 사람 · 도덕 좌표" />
-              <span className="serif text-base text-muted group-open:rotate-45 transition-transform">+</span>
-            </summary>
-            <div className="grid md:grid-cols-2 gap-3 mb-10">
-              {[["철학자", profile.philosopher, "text-accent"], ["인물 / 캐릭터", profile.character, ""]].map(([label, who, cls]) => (
-                <div key={label as string} className="border border-ink/15 p-5 bg-white/40">
-                  <div className="text-[10px] tracking-[0.25em] uppercase text-muted mb-2">{label as string}</div>
-                  <div className={`serif text-xl mb-2 leading-snug ${cls}`}>{(who as { name: string }).name}</div>
-                  <p className="text-[13px] leading-[1.8] text-ink/75">{(who as { note: string }).note}</p>
-                </div>
-              ))}
-            </div>
-            <div className="grid md:grid-cols-[260px_1fr] gap-12 md:gap-16 items-center">
-              <div className="px-10 md:px-0 py-6"><CoordinateMap coords={coords} /></div>
-              <p className="text-[14px] leading-[1.85] text-ink/70 max-w-prose">붉은 점이 당신의 위치. 가로축은 결과주의(왼쪽)와 의무론(오른쪽), 세로축은 보편성(위)과 관계 윤리(아래). 작은 점들은 열한 유형의 평균 위치.</p>
-            </div>
-          </details>
-        </section>
-      </Reveal>
-
-      {/* 연구 데이터 — 접힘 */}
-      <Reveal>
-        <section className={SECTION + " border-t border-ink/10"}>
-          <details className="group">
-            <summary className="cursor-pointer list-none flex items-baseline justify-between gap-3">
-              <ChapterHead no="04" title="사람들은 어떻게 답했나" />
-              <span className="serif text-base text-muted group-open:rotate-45 transition-transform">+</span>
-            </summary>
-            <p className="-mt-3 mb-6 text-[12px] text-muted">각 질문의 실제 연구 수치와 출처. 궁금한 사람만 펼쳐 보면 된다.</p>
+          <Appendix title="사람들은 어떻게 답했나 · 연구와 출처">
             <div className="space-y-7">
               {scenarios.map((s) => (
                 <div key={s.id}>
@@ -486,20 +539,9 @@ export default function ResultAnalysis() {
                 </div>
               ))}
             </div>
-          </details>
-        </section>
-      </Reveal>
-
-      {/* CTA */}
-      <Reveal>
-        <section className="max-w-wide mx-auto px-6 md:px-10 py-8 md:py-10 border-t border-ink/15 space-y-3">
-          <ShareButton profile={profile} answers={answers} />
-          <div className="flex flex-col sm:flex-row gap-3">
-            <button onClick={() => { window.localStorage.removeItem("trolley-answers"); window.location.href = "/"; }} className="flex-1 border border-ink py-3.5 text-sm tracking-wide hover:bg-ink hover:text-paper transition-colors">처음부터 다시</button>
-            <Link href="/" className="flex-1 bg-ink text-paper py-3.5 text-sm tracking-wide hover:bg-accent transition-colors text-center">처음으로</Link>
-          </div>
-        </section>
-      </Reveal>
+          </Appendix>
+        </div>
+      </section>
     </>
   );
 }
