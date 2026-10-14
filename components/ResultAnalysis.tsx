@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { scenarios, getScenarioBySlug } from "@/data/scenarios";
 import Reveal, { useCountUp, useInView } from "./Reveal";
+import TypeIcon, { PersonMedal } from "./TypeIcon";
 
 type Answer = { key: string; label: string; tags: string[] };
 type Answers = Record<number, Answer>;
@@ -377,7 +378,10 @@ export default function ResultAnalysis() {
               <h1 className="serif text-[38px] md:text-[52px] leading-[1.05] tracking-[-0.03em] font-medium">{profile.name}</h1>
               <p className="serif italic text-[17px] md:text-[19px] leading-[1.5] mt-5 text-paper/85">“{profile.motto}”</p>
             </div>
-            <p className="text-[13px] leading-[1.7] text-paper/45">{firstSentence(profile.description)}</p>
+            <div className="flex items-end justify-between gap-6">
+              <p className="text-[13px] leading-[1.7] text-paper/45 max-w-[34ch]">{firstSentence(profile.description)}</p>
+              <TypeIcon typeKey={profile.key} size={96} className="text-paper/40 shrink-0 -mb-1 -mr-1" />
+            </div>
           </Tile>
 
           {/* 네 개의 저울 */}
@@ -454,7 +458,14 @@ export default function ResultAnalysis() {
           ].map(([k, v, note]) => (
             <Tile key={k as string}>
               <Kicker>{k}</Kicker>
-              <p className={note ? "serif text-[17px] md:text-[18px] leading-[1.35] text-ink" : "serif text-[15px] leading-[1.55] text-ink/80"}>{v}</p>
+              {note ? (
+                <div className="flex items-center gap-3">
+                  <PersonMedal name={v as string} size={42} />
+                  <p className="serif text-[17px] md:text-[18px] leading-[1.35] text-ink">{v}</p>
+                </div>
+              ) : (
+                <p className="serif text-[15px] leading-[1.55] text-ink/80">{v}</p>
+              )}
               {note && <p className="mt-1.5 text-[12px] leading-[1.6] text-ink/40 line-clamp-2">{note}</p>}
             </Tile>
           ))}
@@ -495,14 +506,17 @@ export default function ResultAnalysis() {
               {PROFILES.map((t) => {
                 const isMe = t.key === profile.key;
                 return (
-                  <li key={t.key} className="py-3 border-b border-ink/5">
-                    <div className="flex items-baseline justify-between gap-3">
-                      <span className={["serif text-[16px]", isMe ? "text-accent" : ""].join(" ")}>
-                        {t.name}{isMe && <span className="ml-2 text-[11px] tracking-[0.15em] text-accent">당신</span>}
-                      </span>
-                      <span className="text-[12px] text-muted tabular-nums">{t.rarityPct}%</span>
+                  <li key={t.key} className="py-3 border-b border-ink/5 flex items-start gap-4">
+                    <TypeIcon typeKey={t.key} size={32} className={isMe ? "text-accent shrink-0" : "text-ink/40 shrink-0"} />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-3">
+                        <span className={["serif text-[16px]", isMe ? "text-accent" : ""].join(" ")}>
+                          {t.name}{isMe && <span className="ml-2 text-[11px] tracking-[0.15em] text-accent">당신</span>}
+                        </span>
+                        <span className="text-[12px] text-muted tabular-nums">{t.rarityPct}%</span>
+                      </div>
+                      <p className="text-[13px] text-ink/65 mt-0.5">{t.tagline}</p>
                     </div>
-                    <p className="text-[13px] text-ink/65 mt-0.5">{t.tagline}</p>
                   </li>
                 );
               })}
