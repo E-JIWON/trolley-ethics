@@ -197,14 +197,16 @@ const idOf = (slug: string) => getScenarioBySlug(slug)?.id ?? -1;
 
 /* ───────────────────────── 조각 ───────────────────────── */
 
-const SECTION = "max-w-wide mx-auto px-6 md:px-10 py-12 md:py-16";
+const WRAP = "max-w-[1080px] mx-auto px-4 md:px-10";
 
-function Kicker({ children }: { children: ReactNode }) {
-  return <div className="text-[11px] tracking-[0.25em] uppercase text-muted mb-3">{children}</div>;
+/** 벤토 칸 하나 — 얇은 테두리, 그림자 없음 */
+function Tile({ className = "", dark = false, children }: { className?: string; dark?: boolean; children: ReactNode }) {
+  const tone = dark ? "bg-ink text-paper border-ink" : "bg-white/50 border-ink/10";
+  return <div className={`border p-5 md:p-6 flex flex-col ${tone} ${className}`}>{children}</div>;
 }
 
-function SectionTitle({ children }: { children: ReactNode }) {
-  return <h2 className="serif text-[22px] md:text-[26px] leading-[1.3] tracking-[-0.02em] mb-8 md:mb-10">{children}</h2>;
+function Kicker({ children }: { children: ReactNode }) {
+  return <div className="text-[10.5px] tracking-[0.25em] uppercase text-muted mb-3.5">{children}</div>;
 }
 
 function ScaleBar({ label, hint, share, strongest, delay }: { label: string; hint: string; share: number; strongest: boolean; delay: number }) {
@@ -213,12 +215,12 @@ function ScaleBar({ label, hint, share, strongest, delay }: { label: string; hin
   const v = useCountUp(share, inView, 1100, delay);
   return (
     <div ref={ref}>
-      <div className="flex items-baseline justify-between mb-2">
-        <div className="flex items-baseline gap-2.5">
-          <span className={["serif text-[17px] md:text-[18px]", strongest ? "text-accent" : "text-ink"].join(" ")}>{label}</span>
-          <span className="text-[12.5px] text-muted">{hint}</span>
+      <div className="flex items-baseline justify-between mb-1.5">
+        <div className="flex items-baseline gap-2">
+          <span className={["serif text-[15px] md:text-[16px]", strongest ? "text-accent" : "text-ink"].join(" ")}>{label}</span>
+          <span className="text-[12px] text-muted">{hint}</span>
         </div>
-        <span className={["serif tabular-nums text-[17px]", strongest ? "text-accent" : "text-ink/70"].join(" ")}>{v}%</span>
+        <span className={["serif tabular-nums text-[15px]", strongest ? "text-accent" : "text-ink/70"].join(" ")}>{v}%</span>
       </div>
       <div className="h-[3px] bg-line relative overflow-hidden">
         <div
@@ -234,7 +236,7 @@ function CoordinateMap({ coords }: { coords: { x: number; y: number } }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref);
   return (
-    <div ref={ref} className="relative w-full max-w-[220px] mx-auto">
+    <div ref={ref} className="relative w-full max-w-[150px] mx-auto">
       {[["보편", "-top-6 left-1/2 -translate-x-1/2"], ["관계", "-bottom-6 left-1/2 -translate-x-1/2"], ["결과", "top-1/2 -left-10 -translate-y-1/2"], ["원칙", "top-1/2 -right-10 -translate-y-1/2"]].map(([t, c]) => (
         <div key={t} className={`absolute ${c} text-[10px] tracking-[0.2em] text-muted`}>{t}</div>
       ))}
@@ -348,8 +350,6 @@ export default function ResultAnalysis() {
   const shares = cats.map((c) => Math.round((score[c] / totalScore) * 100));
 
   const ans = (slug: string) => answers[idOf(slug)]?.key;
-  const labelOf = (slug: string) => answers[idOf(slug)]?.label ?? "";
-  const titleOf = (slug: string) => getScenarioBySlug(slug)?.title ?? "";
   const moments = MOMENTS.filter((m) => ans(m.a[0]) === m.a[1] && ans(m.b[0]) === m.b[1]).slice(0, 3);
 
   // 다수와 다른 쪽에 선 답 — 그 선택지를 고른 비율이 35% 미만
@@ -360,125 +360,110 @@ export default function ResultAnalysis() {
 
   return (
     <>
-      {/* 1 · 유형 */}
-      <section className="max-w-wide mx-auto px-6 md:px-10 pt-14 md:pt-20 pb-12 md:pb-16">
-        <div className="fade-up text-[11px] tracking-[0.25em] uppercase text-muted mb-5">
-          {answered}개의 답이 가리킨 곳
-        </div>
-        <h1 className="fade-up fade-up-delay-1 serif text-[40px] md:text-[60px] leading-[1.05] tracking-[-0.03em] font-medium">
-          {profile.name}
-        </h1>
-        <div className="fade-up fade-up-delay-1 mt-3 text-[11px] tracking-[0.3em] uppercase text-accent">{profile.alias}</div>
-        <p className="fade-up fade-up-delay-2 mt-8 md:mt-10 serif italic text-[19px] md:text-[23px] leading-[1.5] tracking-[-0.01em] max-w-[30ch]">
-          “{profile.motto}”
-        </p>
-        <p className="fade-up fade-up-delay-3 mt-6 max-w-prose text-[15px] md:text-[16px] leading-[1.9] text-ink/85">
-          {profile.description}
-        </p>
-        <p className="fade-up fade-up-delay-3 mt-6 text-[12.5px] text-muted">
-          응답자 중 약 <span className="text-ink tabular-nums">{profile.rarityPct}%</span>가 이 유형입니다.
-        </p>
-      </section>
+      <div className={WRAP + " pt-8 md:pt-12"}>
+        <div className="text-[11px] tracking-[0.25em] uppercase text-muted mb-4">{answered}개의 답이 가리킨 곳</div>
 
-      {/* 2 · 네 개의 저울 */}
-      <Reveal>
-        <section className={SECTION + " border-t border-ink/10"}>
-          <Kicker>네 개의 저울</Kicker>
-          <SectionTitle>당신의 답은 이 무게로 기울었습니다</SectionTitle>
-          <div className="grid md:grid-cols-[minmax(0,1fr)_220px] gap-12 md:gap-20 items-center">
-            <div className="space-y-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-3">
+          {/* 유형 — 가장 큰 칸, 잉크 바탕 */}
+          <Tile dark className="col-span-2 lg:row-span-2 justify-between gap-8">
+            <div>
+              <div className="text-[11px] tracking-[0.3em] uppercase text-paper/60 mb-4">{profile.alias}</div>
+              <h1 className="serif text-[34px] md:text-[44px] leading-[1.05] tracking-[-0.03em] font-medium">{profile.name}</h1>
+              <p className="serif italic text-[16px] md:text-[18px] leading-[1.5] mt-5 text-paper/90">“{profile.motto}”</p>
+            </div>
+            <p className="text-[13.5px] md:text-[14px] leading-[1.8] text-paper/70">{profile.description}</p>
+          </Tile>
+
+          {/* 네 개의 저울 */}
+          <Tile className="col-span-2">
+            <Kicker>네 개의 저울</Kicker>
+            <div className="space-y-3.5">
               {cats.map((c, i) => (
                 <ScaleBar key={c} label={SCALE_LABEL[c]} hint={SCALE_HINT[c]} share={shares[i]} strongest={i === 0 && score[c] > 0} delay={i * 120} />
               ))}
             </div>
-            <div className="px-10 md:px-0 py-6 hidden md:block"><CoordinateMap coords={coords} /></div>
-          </div>
-        </section>
-      </Reveal>
+          </Tile>
 
-      {/* 3 · 당신이 드러난 순간 */}
-      {moments.length > 0 && (
-        <Reveal>
-          <section className={SECTION + " border-t border-ink/10"}>
-            <Kicker>당신이 드러난 순간</Kicker>
-            <SectionTitle>두 답 사이의 틈</SectionTitle>
-            <div className="space-y-10 md:space-y-12">
-              {moments.map((m) => (
-                <div key={m.title} className="grid md:grid-cols-[240px_minmax(0,1fr)] gap-4 md:gap-12">
-                  <div className="text-[13px] leading-[1.7] text-muted">
-                    <div><span className="text-ink/70">{titleOf(m.a[0])}</span> — <span className="text-ink">{labelOf(m.a[0])}</span></div>
-                    <div><span className="text-ink/70">{titleOf(m.b[0])}</span> — <span className="text-ink">{labelOf(m.b[0])}</span></div>
-                  </div>
-                  <div className="border-l-2 border-accent pl-5">
-                    <h3 className="serif text-[18px] md:text-[20px] leading-[1.4] mb-2">{m.title}</h3>
-                    <p className="text-[14.5px] leading-[1.8] text-ink/75 max-w-prose">{m.desc}</p>
-                  </div>
-                </div>
-              ))}
+          {/* 좌표 */}
+          <Tile>
+            <Kicker>도덕 좌표</Kicker>
+            <div className="flex-1 flex items-center justify-center px-7 py-5"><CoordinateMap coords={coords} /></div>
+          </Tile>
+
+          {/* 희소성 */}
+          <Tile className="justify-between">
+            <Kicker>같은 유형</Kicker>
+            <div>
+              <div className="serif text-[44px] md:text-[52px] leading-none tabular-nums text-accent">{profile.rarityPct}<span className="text-[20px] text-muted ml-0.5">%</span></div>
+              <p className="mt-2 text-[12.5px] text-muted leading-snug">응답자 중 이 유형의 비율 (추정)</p>
             </div>
-          </section>
-        </Reveal>
-      )}
+          </Tile>
 
-      {/* 4 · 소수의 편 */}
-      <Reveal>
-        <section className={SECTION + " border-t border-ink/10"}>
-          <Kicker>소수의 편</Kicker>
-          {minority.length === 0 ? (
-            <SectionTitle>{answered}번 모두, 다수와 같은 쪽에 섰습니다</SectionTitle>
-          ) : (
-            <>
-              <SectionTitle>
-                {answered}번 중 <span className="text-accent tabular-nums">{minority.length}</span>번, 대부분의 사람과 다른 답을 했습니다
-              </SectionTitle>
-              <ul className="divide-y divide-ink/10 border-y border-ink/10">
-                {minority.map(({ s, a, p }) => (
-                  <li key={s.id} className="flex items-baseline gap-4 md:gap-6 py-4">
-                    <span className="serif text-[24px] md:text-[28px] tabular-nums text-accent w-14 md:w-16 shrink-0 leading-none">{p}%</span>
-                    <div className="min-w-0">
-                      <div className="serif text-[16px] md:text-[17px] leading-snug">{a.label}</div>
-                      <div className="text-[12.5px] text-muted mt-0.5">{s.title}</div>
-                    </div>
+          {/* 두 답 사이의 틈 */}
+          <Tile className="col-span-2">
+            <Kicker>두 답 사이의 틈</Kicker>
+            {moments.length === 0 ? (
+              <p className="serif text-[17px] leading-[1.5]">답들 사이에 눈에 띄는 어긋남이 없었습니다. 한 저울로 끝까지 잰 사람.</p>
+            ) : (
+              <ul className="space-y-4">
+                {moments.map((m) => (
+                  <li key={m.title} className="border-l-2 border-accent pl-3.5">
+                    <div className="serif text-[16px] md:text-[17px] leading-[1.4]">{m.title}</div>
+                    <p className="text-[13px] leading-[1.65] text-ink/65 mt-1">{m.desc}</p>
                   </li>
                 ))}
               </ul>
-              <p className="mt-4 text-[12px] text-muted">숫자는 같은 답을 한 사람의 비율.</p>
-            </>
-          )}
-        </section>
-      </Reveal>
+            )}
+          </Tile>
 
-      {/* 5 · 강점 · 약점 · 닮은 사람 */}
-      <Reveal>
-        <section className={SECTION + " border-t border-ink/10"}>
-          <div className="grid md:grid-cols-2 gap-x-16 gap-y-10">
-            {[
-              ["잘하는 것", profile.strength, null],
-              ["조심할 것", profile.weakness, null],
-              ["닮은 철학자", profile.philosopher.name, profile.philosopher.note],
-              ["닮은 인물", profile.character.name, profile.character.note],
-            ].map(([k, v, note]) => (
-              <div key={k as string}>
-                <Kicker>{k}</Kicker>
-                <p className="serif text-[18px] md:text-[19px] leading-[1.5]">{v}</p>
-                {note && <p className="mt-2 text-[13.5px] leading-[1.75] text-ink/65">{note}</p>}
-              </div>
-            ))}
-          </div>
-        </section>
-      </Reveal>
+          {/* 소수의 편 */}
+          <Tile className="col-span-2">
+            <Kicker>소수의 편</Kicker>
+            <div className="flex items-baseline gap-3 mb-4">
+              <span className="serif text-[40px] leading-none tabular-nums text-accent">{minority.length}</span>
+              <span className="text-[13px] text-muted">/ {answered}번, 대부분과 다른 답</span>
+            </div>
+            {minority.length === 0 ? (
+              <p className="text-[13px] text-ink/65">모든 질문에서 다수와 같은 쪽에 섰습니다.</p>
+            ) : (
+              <ul className="divide-y divide-ink/10 border-t border-ink/10">
+                {minority.slice(0, 4).map(({ s, a, p }) => (
+                  <li key={s.id} className="flex items-baseline justify-between gap-3 py-2">
+                    <span className="min-w-0 truncate text-[13.5px]">
+                      {a.label}<span className="text-muted ml-2 text-[12px]">{s.title}</span>
+                    </span>
+                    <span className="serif tabular-nums text-[15px] text-accent shrink-0">{p}%</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Tile>
 
-      {/* 6 · 공유 */}
-      <section className="max-w-wide mx-auto px-6 md:px-10 py-10 md:py-12 border-t border-ink/15 space-y-3">
-        <ShareButton profile={profile} answers={answers} />
-        <div className="flex flex-col sm:flex-row gap-3">
-          <button onClick={() => { window.localStorage.removeItem("trolley-answers"); window.location.href = "/"; }} className="flex-1 border border-ink py-3.5 text-sm tracking-wide hover:bg-ink hover:text-paper transition-colors">처음부터 다시</button>
-          <Link href="/" className="flex-1 bg-ink text-paper py-3.5 text-sm tracking-wide hover:bg-accent transition-colors text-center">처음으로</Link>
+          {/* 강점 · 약점 · 닮은 사람 */}
+          {[
+            ["잘하는 것", profile.strength, null],
+            ["조심할 것", profile.weakness, null],
+            ["닮은 철학자", profile.philosopher.name, profile.philosopher.note],
+            ["닮은 인물", profile.character.name, profile.character.note],
+          ].map(([k, v, note]) => (
+            <Tile key={k as string}>
+              <Kicker>{k}</Kicker>
+              <p className="serif text-[15px] md:text-[16px] leading-[1.5]">{v}</p>
+              {note && <p className="mt-2 text-[12.5px] leading-[1.65] text-ink/60">{note}</p>}
+            </Tile>
+          ))}
         </div>
-      </section>
+
+        {/* 공유 */}
+        <div className="mt-3 grid sm:grid-cols-[2fr_1fr_1fr] gap-2.5 md:gap-3">
+          <ShareButton profile={profile} answers={answers} />
+          <button onClick={() => { window.localStorage.removeItem("trolley-answers"); window.location.href = "/"; }} className="border border-ink py-4 text-sm tracking-wide hover:bg-ink hover:text-paper transition-colors">처음부터 다시</button>
+          <Link href="/" className="bg-ink text-paper py-4 text-sm tracking-wide hover:bg-accent transition-colors text-center">처음으로</Link>
+        </div>
+      </div>
 
       {/* 부록 — 궁금한 사람만 */}
-      <section className="max-w-wide mx-auto px-6 md:px-10 pt-6 pb-20">
+      <section className={WRAP + " pt-10 pb-20"}>
         <div className="border-t border-ink/10">
           <Appendix title="내 답 전체" count={`${answered}/${scenarios.length}`}>
             <ul className="grid md:grid-cols-2 gap-x-10">

@@ -10,7 +10,7 @@ export default function ResultPage() {
   return (
     <main className="min-h-screen bg-paper">
       <header className="border-b border-line sticky top-0 bg-paper/90 backdrop-blur z-10">
-        <div className="max-w-wide mx-auto px-6 md:px-10 py-5 flex items-center justify-between">
+        <div className="max-w-[1080px] mx-auto px-4 md:px-10 py-5 flex items-center justify-between">
           <Link
             href="/"
             className="text-[11px] tracking-[0.2em] uppercase text-muted hover:text-ink transition-colors"
