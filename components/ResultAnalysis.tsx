@@ -4,7 +4,8 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { scenarios, getScenarioBySlug } from "@/data/scenarios";
 import Reveal, { useCountUp, useInView } from "./Reveal";
-import TypeIcon, { PersonMedal } from "./TypeIcon";
+import TypeIcon from "./TypeIcon";
+import PersonPhoto from "./PersonPhoto";
 
 type Answer = { key: string; label: string; tags: string[] };
 type Answers = Record<number, Answer>;
@@ -460,7 +461,7 @@ export default function ResultAnalysis() {
               <Kicker>{k}</Kicker>
               {note ? (
                 <div className="flex items-center gap-3">
-                  <PersonMedal name={v as string} size={42} />
+                  <PersonPhoto name={v as string} size={52} />
                   <p className="serif text-[17px] md:text-[18px] leading-[1.35] text-ink">{v}</p>
                 </div>
               ) : (
@@ -544,6 +545,7 @@ export default function ResultAnalysis() {
                 </div>
               ))}
             </div>
+            <p className="mt-8 text-[11.5px] text-muted">인물 사진: Wikipedia / Wikimedia Commons — 각 사진의 라이선스를 따릅니다.</p>
           </Appendix>
         </div>
       </section>
