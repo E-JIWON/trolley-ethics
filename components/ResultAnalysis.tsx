@@ -206,7 +206,7 @@ function Tile({ className = "", dark = false, children }: { className?: string; 
 }
 
 function Kicker({ children }: { children: ReactNode }) {
-  return <div className="text-[10.5px] tracking-[0.25em] uppercase text-muted mb-3.5">{children}</div>;
+  return <div className="text-[10px] tracking-[0.25em] uppercase text-muted/70 mb-3">{children}</div>;
 }
 
 function ScaleBar({ label, hint, share, strongest, delay }: { label: string; hint: string; share: number; strongest: boolean; delay: number }) {
@@ -217,14 +217,14 @@ function ScaleBar({ label, hint, share, strongest, delay }: { label: string; hin
     <div ref={ref}>
       <div className="flex items-baseline justify-between mb-1.5">
         <div className="flex items-baseline gap-2">
-          <span className={["serif text-[15px] md:text-[16px]", strongest ? "text-accent" : "text-ink"].join(" ")}>{label}</span>
-          <span className="text-[12px] text-muted">{hint}</span>
+          <span className={["serif", strongest ? "text-[17px] md:text-[18px] text-accent" : "text-[14px] text-ink/50"].join(" ")}>{label}</span>
+          {strongest && <span className="text-[12px] text-ink/40">{hint}</span>}
         </div>
-        <span className={["serif tabular-nums text-[15px]", strongest ? "text-accent" : "text-ink/70"].join(" ")}>{v}%</span>
+        <span className={["serif tabular-nums", strongest ? "text-[17px] md:text-[18px] text-accent" : "text-[14px] text-ink/40"].join(" ")}>{v}%</span>
       </div>
       <div className="h-[3px] bg-line relative overflow-hidden">
         <div
-          className={["absolute inset-y-0 left-0 transition-[width] duration-[1100ms] ease-out", strongest ? "bg-accent" : "bg-ink/40"].join(" ")}
+          className={["absolute inset-y-0 left-0 transition-[width] duration-[1100ms] ease-out", strongest ? "bg-accent" : "bg-ink/20"].join(" ")}
           style={{ width: inView ? `${share}%` : "0%", transitionDelay: `${delay}ms` }}
         />
       </div>
@@ -238,7 +238,7 @@ function CoordinateMap({ coords }: { coords: { x: number; y: number } }) {
   return (
     <div ref={ref} className="relative w-full max-w-[150px] mx-auto">
       {[["보편", "-top-6 left-1/2 -translate-x-1/2"], ["관계", "-bottom-6 left-1/2 -translate-x-1/2"], ["결과", "top-1/2 -left-10 -translate-y-1/2"], ["원칙", "top-1/2 -right-10 -translate-y-1/2"]].map(([t, c]) => (
-        <div key={t} className={`absolute ${c} text-[10px] tracking-[0.2em] text-muted`}>{t}</div>
+        <div key={t} className={`absolute ${c} text-[9.5px] tracking-[0.2em] text-muted/60`}>{t}</div>
       ))}
       <div className="aspect-square border border-ink/15 relative">
         <div className="absolute inset-x-0 top-1/2 h-px bg-ink/10" />
@@ -324,6 +324,12 @@ const MOMENTS: { a: [string, string]; b: [string, string]; title: string; desc: 
   { a: ["pond", "same"], b: ["kin", "nothing"], title: "먼 아이도 같다면서, 가족은 특별했다", desc: "당신에게 '거리'는 변수가 아니지만 '관계'는 변수입니다." },
 ];
 
+/** 설명은 첫 문장만 — 나머지는 장황하다 */
+function firstSentence(text: string) {
+  const m = text.match(/^.+?[.!?](?=\s|$)/);
+  return m ? m[0] : text;
+}
+
 export default function ResultAnalysis() {
   const [answers, setAnswers] = useState<Answers | null>(null);
   useEffect(() => {
@@ -361,17 +367,17 @@ export default function ResultAnalysis() {
   return (
     <>
       <div className={WRAP + " pt-8 md:pt-12"}>
-        <div className="text-[11px] tracking-[0.25em] uppercase text-muted mb-4">{answered}개의 답이 가리킨 곳</div>
+        <div className="text-[10px] tracking-[0.25em] uppercase text-muted/70 mb-4">{answered}개의 답이 가리킨 곳</div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 md:gap-3">
           {/* 유형 — 가장 큰 칸, 잉크 바탕 */}
           <Tile dark className="col-span-2 lg:row-span-2 justify-between gap-8">
             <div>
-              <div className="text-[11px] tracking-[0.3em] uppercase text-paper/60 mb-4">{profile.alias}</div>
-              <h1 className="serif text-[34px] md:text-[44px] leading-[1.05] tracking-[-0.03em] font-medium">{profile.name}</h1>
-              <p className="serif italic text-[16px] md:text-[18px] leading-[1.5] mt-5 text-paper/90">“{profile.motto}”</p>
+              <div className="text-[10px] tracking-[0.3em] uppercase text-paper/40 mb-4">{profile.alias}</div>
+              <h1 className="serif text-[38px] md:text-[52px] leading-[1.05] tracking-[-0.03em] font-medium">{profile.name}</h1>
+              <p className="serif italic text-[17px] md:text-[19px] leading-[1.5] mt-5 text-paper/85">“{profile.motto}”</p>
             </div>
-            <p className="text-[13.5px] md:text-[14px] leading-[1.8] text-paper/70">{profile.description}</p>
+            <p className="text-[13px] leading-[1.7] text-paper/45">{firstSentence(profile.description)}</p>
           </Tile>
 
           {/* 네 개의 저울 */}
@@ -395,7 +401,7 @@ export default function ResultAnalysis() {
             <Kicker>같은 유형</Kicker>
             <div>
               <div className="serif text-[44px] md:text-[52px] leading-none tabular-nums text-accent">{profile.rarityPct}<span className="text-[20px] text-muted ml-0.5">%</span></div>
-              <p className="mt-2 text-[12.5px] text-muted leading-snug">응답자 중 이 유형의 비율 (추정)</p>
+              <p className="mt-2 text-[11.5px] text-ink/40 leading-snug">응답자 중 (추정)</p>
             </div>
           </Tile>
 
@@ -405,11 +411,11 @@ export default function ResultAnalysis() {
             {moments.length === 0 ? (
               <p className="serif text-[17px] leading-[1.5]">답들 사이에 눈에 띄는 어긋남이 없었습니다. 한 저울로 끝까지 잰 사람.</p>
             ) : (
-              <ul className="space-y-4">
+              <ul className="space-y-3.5">
                 {moments.map((m) => (
                   <li key={m.title} className="border-l-2 border-accent pl-3.5">
-                    <div className="serif text-[16px] md:text-[17px] leading-[1.4]">{m.title}</div>
-                    <p className="text-[13px] leading-[1.65] text-ink/65 mt-1">{m.desc}</p>
+                    <div className="serif text-[16px] md:text-[17px] leading-[1.4] text-ink">{m.title}</div>
+                    <p className="text-[12px] leading-[1.6] text-ink/40 mt-0.5">{m.desc}</p>
                   </li>
                 ))}
               </ul>
@@ -420,19 +426,19 @@ export default function ResultAnalysis() {
           <Tile className="col-span-2">
             <Kicker>소수의 편</Kicker>
             <div className="flex items-baseline gap-3 mb-4">
-              <span className="serif text-[40px] leading-none tabular-nums text-accent">{minority.length}</span>
-              <span className="text-[13px] text-muted">/ {answered}번, 대부분과 다른 답</span>
+              <span className="serif text-[44px] md:text-[52px] leading-none tabular-nums text-accent">{minority.length}</span>
+              <span className="text-[12.5px] text-ink/45">/ {answered}번, 대부분과 다른 답</span>
             </div>
             {minority.length === 0 ? (
-              <p className="text-[13px] text-ink/65">모든 질문에서 다수와 같은 쪽에 섰습니다.</p>
+              <p className="text-[12.5px] text-ink/45">모든 질문에서 다수와 같은 쪽에 섰습니다.</p>
             ) : (
               <ul className="divide-y divide-ink/10 border-t border-ink/10">
                 {minority.slice(0, 4).map(({ s, a, p }) => (
                   <li key={s.id} className="flex items-baseline justify-between gap-3 py-2">
-                    <span className="min-w-0 truncate text-[13.5px]">
-                      {a.label}<span className="text-muted ml-2 text-[12px]">{s.title}</span>
+                    <span className="min-w-0 truncate text-[14px] text-ink/85">
+                      {a.label}<span className="text-ink/35 ml-2 text-[11.5px]">{s.title}</span>
                     </span>
-                    <span className="serif tabular-nums text-[15px] text-accent shrink-0">{p}%</span>
+                    <span className="serif tabular-nums text-[14px] text-accent/80 shrink-0">{p}%</span>
                   </li>
                 ))}
               </ul>
@@ -448,8 +454,8 @@ export default function ResultAnalysis() {
           ].map(([k, v, note]) => (
             <Tile key={k as string}>
               <Kicker>{k}</Kicker>
-              <p className="serif text-[15px] md:text-[16px] leading-[1.5]">{v}</p>
-              {note && <p className="mt-2 text-[12.5px] leading-[1.65] text-ink/60">{note}</p>}
+              <p className={note ? "serif text-[17px] md:text-[18px] leading-[1.35] text-ink" : "serif text-[15px] leading-[1.55] text-ink/80"}>{v}</p>
+              {note && <p className="mt-1.5 text-[12px] leading-[1.6] text-ink/40 line-clamp-2">{note}</p>}
             </Tile>
           ))}
         </div>
